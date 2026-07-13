@@ -240,6 +240,30 @@ async function startGame(){
     await runScene([{type:'stress',d:-10,toast:'😌 压力-10（精准引导）'},{type:'them',text:'嗯...C方向不错。就照这个来吧。',t:1000,time:'9:47'}]);
   }
 
+  // ══ SCENE 1.5: 同事离职 ══
+  setTime('10:00');addInfo('⏰ 上午 10:00');
+  await runScene([
+    {type:'notification',text:'💬 同事小张：李哥，中午有空吗？请你们吃饭',d:2500,w:2000},
+    {type:'delay',ms:600},
+    {type:'them',text:'哦对了，小张要走了。你知道吗？',t:800,time:'10:02'},
+    {type:'them',text:'他跟我说——这个甲方，上一个人就是被骂走的。',t:1000,time:'10:03'},
+    {type:'them',text:'从入职第三个月开始骂，骂到离职，整整骂了三年。',t:1200,time:'10:04'},
+    {type:'them',text:'所以我跟你说——别太往心里去。王总对谁都这样。',t:1000,time:'10:05'},
+  ]);
+  addInfo('你想起小张前天请你吃的散伙饭。12个人点的菜，结账时走了一大半，就剩你们俩买单2000多。');
+  const c_1_5=await showDecision(
+    '同事跟你说：你对接的甲方上一个人被骂了三年骂到离职。小张也要走了。你——',
+    '😰 "...谢谢提醒。我会注意的。"（心里一沉，但继续干活）',
+    '🤔 "那你们觉得，这个人有什么应对技巧吗？"（取经）'
+  );
+  if(c_1_5==='left'){
+    addMsg('me','...谢谢提醒。我会注意的。','10:06');
+    await runScene([{type:'stress',d:10,toast:'😰 压力+10（知道真相了）'},{type:'them',text:'嗯。你加油。小张说他这些年学到最重要的一课：甲方骂人的时候不是因为你的工作，是因为他自己压力大。',t:2000,time:'10:08'}]);
+  }else{
+    addMsg('me','你们对接了这么久，有什么经验可以分享吗？','10:06');
+    await runScene([{type:'stress',d:-5,toast:'😌 主动取经'},{type:'delay',ms:1500},{type:'them',text:'问得好。',t:600,time:'10:08'},{type:'them',text:'第一：甲方骂人时别急着辩解，先让他把情绪发完。',t:1200,time:'10:09'},{type:'them',text:'第二：每次开会后发会议纪要确认，防止翻脸不认。',t:1200,time:'10:10'},{type:'them',text:'第三：最重要的——甲方也是打工人，他上面还有人。有时候不是他想折腾你，是他在被折腾。',t:2000,time:'10:11'}]);
+  }
+
   // ══ SCENE 2: Phone Call ══
   setTime('10:32');addInfo('⏰ 上午 10:32');
   await runScene([
@@ -328,6 +352,36 @@ async function startGame(){
     await runScene([{type:'stress',d:10,toast:'😅 压力+10（强行淡定）'},{type:'delay',ms:3000},{type:'them',text:'......行。继续吧。',t:2000,time:'14:25'}]);
   }
 
+  // ══ SCENE 3.5: PUA + 年终奖往事 ══
+  setTime('14:30');addInfo('⏰ 下午 2:30 · 同事茶水间偶遇');
+  await runScene([
+    {type:'info',text:'你在茶水间碰到隔壁组的老周。老周在公司四年了，从来不在会议上说话。'},
+    {type:'them',text:'小李，听说你刚才在群里硬刚了？佩服。',t:800,time:'14:31'},
+  ]);
+  addMsg('me','也不算刚...就是正常沟通。','14:32');
+  await runScene([
+    {type:'them',text:'正常沟通？我在这公司四年了——上次团建，赵总说"说说真心话"。',t:1200,time:'14:33'},
+    {type:'them',text:'新来的小王当真了，说考勤太严该灵活点。',t:1000,time:'14:33'},
+    {type:'them',text:'一个月后，小王被优化了。理由是"对公司文化认同度不高"。',t:1200,time:'14:34'},
+    {type:'them',text:'还有——去年年终奖你记得吗？说好三个月工资，结果按入职工资算。',t:1500,time:'14:35'},
+    {type:'them',text:'我入职时月薪3000，五年后年终奖还是按3000算。9000块钱的年终奖。',t:1500,time:'14:36'},
+    {type:'them',text:'五年了。每年年会老板都说"今年是最好的一年"。每年年终奖都是按五年前的工资算。',t:1800,time:'14:37'},
+    {type:'them',text:'所以我不在会议上说话了。不值得。',t:1000,time:'14:38'},
+  ]);
+  const c_3_5=await showDecision(
+    '老周告诉你：团建说真话的人被优化了，年终奖按五年前工资算。你——',
+    '😞 "...谢谢你告诉我这些。"（心里更沉重了）',
+    '💪 "老周，你有没有想过——忍了五年，值不值得换个地方？"'
+  );
+  if(c_3_5==='left'){
+    addMsg('me','...谢谢你告诉我这些。我会小心的。','14:39');
+    await runScene([{type:'stress',d:10,toast:'😞 压力+10（这公司也太坑了）'}]);
+  }else{
+    addMsg('me','老周，你在这忍了五年。年终奖按五年前工资算，开会不能说话——你值不值得换个地方？','14:39');
+    await runScene([{type:'them',text:'...你说得对。我上个月偷偷面试了，拿了两个offer。',t:1500,time:'14:40'},{type:'them',text:'但我一直没下决心。也许是时候了。',t:1000,time:'14:41'},{type:'stress',d:-5,toast:'😌（也许帮到了别人）'}]);
+    addInfo('三个月后，你听说老周辞职了。跳到竞争对手那边，薪资翻倍。');
+  }
+
   // ══ SCENE 4: Afternoon Avalanche + Price War ══
   await runScene([
     {type:'notification',text:'💬 同事小张：李哥，王总让你顺便把下个月的策划案也出了',d:2500,w:2000},
@@ -355,6 +409,29 @@ async function startGame(){
   }else{
     addMsg('me','王总，我给您打个八折。','14:33');
     await runScene([{type:'stress',d:20,toast:'😞 压力+20（利润被砍）'},{type:'them',text:'八折？七折吧。行，方案你尽快。',t:1000,time:'14:35'}]);
+  }
+
+  // ══ SCENE 4.5: 体检报告 + 35岁 ══
+  setTime('16:30');addInfo('⏰ 下午 4:30 · 手机弹出一条提醒');
+  await runScene([
+    {type:'notification',text:'🏥 年度体检报告已出：压力指标连续三年异常，建议复查',d:3500,w:3000},
+    {type:'delay',ms:1000},
+    {type:'info',text:'你翻开体检报告。三年前入职时还是全绿。今年三页纸两页红。'},
+    {type:'info',text:'你想起去年被裁的老刘——35岁，N+3拿了两个月后开始找工作。每个猎头都说"客户要求30-35岁"。他把简历上的年龄删了，面试时被问年龄，对方"哦"了一声。那声"哦"他听出了所有。'},
+    {type:'info',text:'老刘后来跟你说：给年轻人的建议——30岁之前就要考虑35岁的出路。不是贩卖焦虑，是血泪教训。'},
+  ]);
+  const c_4_5=await showDecision(
+    '体检报告亮红灯。35岁的老刘被裁后找不到工作。你的身体和你的未来都在发信号——',
+    '😰 "先把项目做完吧...过完年再说。"（继续埋头）',
+    '😤 "我需要认真想想了。"（正视问题）'
+  );
+  if(c_4_5==='left'){
+    addMsg('me','...先把项目做完。过完年再说。','16:32');
+    await runScene([{type:'stress',d:10,toast:'😞 压力+10（你知道自己在逃避）'}]);
+  }else{
+    addMsg('me','（你默默想：体检报告不会说谎。三年了。我需要一个计划。）','16:32');
+    await runScene([{type:'stress',d:-5,toast:'😤（至少开始正视了）'}]);
+    addInfo('你把体检报告截图存进了"重要"文件夹。旁边是三个月前更新的简历。');
   }
 
   // ══ SCENE 5: The 5:30 Bomb ══
