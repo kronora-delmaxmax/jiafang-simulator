@@ -3,432 +3,259 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>甲方模拟器 · 你能活到第几集？</title>
+<title>甲方模拟器 2.0 · 职场生存图鉴</title>
 <style>
 :root {
-  --phone-w: 390px;
-  --phone-h: 844px;
-  --bubble-me: #007AFF;
-  --bubble-them: #E9E9EB;
-  --bg: #F2F2F7;
-  --danger: #FF3B30;
-  --success: #34C759;
+  --phone-w: 390px; --phone-h: 844px;
+  --bubble-me: #007AFF; --bubble-them: #E9E9EB;
+  --bg: #F2F2F7; --danger: #FF3B30; --success: #34C759;
 }
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin:0; padding:0; box-sizing:border-box; }
 body {
-  display: flex; justify-content: center; align-items: center;
-  min-height: 100vh; background: #1a1a2e;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'PingFang SC', sans-serif;
-  overflow: hidden;
+  display:flex; justify-content:center; align-items:center;
+  min-height:100vh; background:#1a1a2e;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+  overflow:hidden; user-select:none; -webkit-user-select:none;
   -webkit-tap-highlight-color: transparent;
-  user-select: none; -webkit-user-select: none;
 }
-
-/* Phone Frame */
 .phone {
-  width: var(--phone-w); height: var(--phone-h);
-  background: #000; border-radius: 44px;
-  position: relative; overflow: hidden;
+  width:var(--phone-w); height:var(--phone-h);
+  background:#000; border-radius:44px; position:relative; overflow:hidden;
   box-shadow: 0 0 0 3px #1a1a1a, 0 0 0 6px #333, 0 20px 60px rgba(0,0,0,0.5);
 }
-@media (max-width: 420px) {
-  .phone { width: 100vw; height: 100vh; border-radius: 0; box-shadow: none; }
+@media (max-width:420px) {
+  .phone { width:100vw; height:100vh; border-radius:0; box-shadow:none; }
 }
-
-/* Status Bar */
 .status-bar {
-  height: 54px; background: #000;
-  display: flex; justify-content: space-between; align-items: flex-end;
-  padding: 0 28px 8px; color: #fff; font-size: 12px; font-weight: 600;
-  position: relative; z-index: 10;
+  height:54px; background:#000; display:flex; justify-content:space-between;
+  align-items:flex-end; padding:0 28px 8px; color:#fff; font-size:12px; font-weight:600; position:relative; z-index:10;
 }
-.status-bar .time { font-size: 15px; font-weight: 700; }
-.status-bar .icons { display: flex; gap: 6px; align-items: center; }
+.status-bar .time { font-size:15px; font-weight:700; }
 .notch {
-  position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
-  width: 120px; height: 30px; background: #000; border-radius: 0 0 20px 20px;
-  z-index: 11;
+  position:absolute; top:8px; left:50%; transform:translateX(-50%);
+  width:120px; height:30px; background:#000; border-radius:0 0 20px 20px; z-index:11;
 }
-
-/* Chat Header */
 .chat-header {
-  height: 50px; background: rgba(0,0,0,0.92);
-  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  display: flex; align-items: center; padding: 0 16px;
-  border-bottom: 0.5px solid rgba(255,255,255,0.15);
-  position: relative; z-index: 5;
+  height:50px; background:rgba(0,0,0,0.92); backdrop-filter:blur(20px);
+  display:flex; align-items:center; padding:0 16px;
+  border-bottom:0.5px solid rgba(255,255,255,0.15); position:relative; z-index:5;
 }
-.chat-header .back { color: #007AFF; font-size: 16px; cursor: pointer; }
 .chat-header .avatar {
-  width: 34px; height: 34px; border-radius: 50%;
-  background: linear-gradient(135deg, #FF6B35, #D32F2F);
-  display: flex; align-items: center; justify-content: center;
-  color: #fff; font-weight: 700; font-size: 14px; margin: 0 10px;
+  width:34px; height:34px; border-radius:50%;
+  background:linear-gradient(135deg, #FF6B35, #D32F2F);
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-weight:700; font-size:14px; margin:0 10px;
 }
-.chat-header .name { color: #fff; font-weight: 600; font-size: 16px; flex: 1; }
-.chat-header .status { color: #34C759; font-size: 11px; display: block; font-weight: 400; }
-
-/* Chat Area */
+.chat-header .name { color:#fff; font-weight:600; font-size:16px; flex:1; }
 .chat-area {
-  height: calc(100% - 54px - 50px);
-  background: #000;
-  overflow-y: auto; overflow-x: hidden;
-  padding: 12px 16px 20px;
-  display: flex; flex-direction: column;
-  gap: 4px;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
+  height:calc(100% - 54px - 50px); background:#000;
+  overflow-y:auto; padding:12px 16px 20px; display:flex; flex-direction:column; gap:4px;
+  scroll-behavior:smooth; -webkit-overflow-scrolling:touch;
 }
-.chat-area::-webkit-scrollbar { display: none; }
-
-/* Message Bubbles */
-.msg-row { display: flex; flex-direction: column; animation: msgIn 0.35s ease-out; }
-.msg-row.them { align-items: flex-start; }
-.msg-row.me { align-items: flex-end; }
-.msg-row.info { align-items: center; }
-
-@keyframes msgIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-
-.msg-bubble {
-  max-width: 78%; padding: 10px 14px; border-radius: 18px;
-  font-size: 15px; line-height: 1.5; word-break: break-word;
-  position: relative;
-}
-.msg-row.them .msg-bubble {
-  background: #1C1C1E; color: #fff;
-  border-bottom-left-radius: 4px;
-}
-.msg-row.me .msg-bubble {
-  background: var(--bubble-me); color: #fff;
-  border-bottom-right-radius: 4px;
-}
-.msg-row.info .msg-bubble {
-  background: transparent; color: #8E8E93; font-size: 12px; text-align: center; max-width: 100%;
-}
-
-.msg-time {
-  font-size: 11px; color: #8E8E93; margin: 2px 4px 0;
-}
-.msg-row.them .msg-time { text-align: left; }
-.msg-row.me .msg-time { text-align: right; }
-
-/* Voice message bubble */
+.chat-area::-webkit-scrollbar { display:none; }
+.msg-row { display:flex; flex-direction:column; animation:msgIn 0.35s ease-out; }
+.msg-row.them { align-items:flex-start; }
+.msg-row.me { align-items:flex-end; }
+.msg-row.info { align-items:center; }
+@keyframes msgIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+.msg-bubble { max-width:78%; padding:10px 14px; border-radius:18px; font-size:15px; line-height:1.5; word-break:break-word; }
+.msg-row.them .msg-bubble { background:#1C1C1E; color:#fff; border-bottom-left-radius:4px; }
+.msg-row.me .msg-bubble { background:var(--bubble-me); color:#fff; border-bottom-right-radius:4px; }
+.msg-row.info .msg-bubble { background:transparent; color:#8E8E93; font-size:12px; text-align:center; max-width:100%; }
+.msg-time { font-size:11px; color:#8E8E93; margin:2px 4px 0; }
 .voice-bubble {
-  display: flex; align-items: center; gap: 8px;
-  background: #1C1C1E; padding: 10px 14px; border-radius: 18px;
-  border-bottom-left-radius: 4px; cursor: pointer; max-width: 70%;
+  display:flex; align-items:center; gap:8px; background:#1C1C1E;
+  padding:10px 14px; border-radius:18px; border-bottom-left-radius:4px;
+  cursor:pointer; max-width:70%; animation:msgIn 0.35s ease-out;
 }
-.voice-bubble .wave { display: flex; align-items: center; gap: 2px; }
-.voice-bubble .wave span {
-  width: 3px; background: #007AFF; border-radius: 2px;
-  animation: wave 0.6s ease-in-out infinite;
-}
-.voice-bubble .wave span:nth-child(1) { height: 12px; animation-delay: 0s; }
-.voice-bubble .wave span:nth-child(2) { height: 20px; animation-delay: 0.1s; }
-.voice-bubble .wave span:nth-child(3) { height: 8px; animation-delay: 0.2s; }
-.voice-bubble .wave span:nth-child(4) { height: 16px; animation-delay: 0.3s; }
-.voice-bubble .dur { color: #8E8E93; font-size: 12px; }
-@keyframes wave { 0%,100% { transform: scaleY(1); } 50% { transform: scaleY(0.4); } }
-
-/* Typing Indicator */
+.voice-bubble .wave { display:flex; align-items:center; gap:2px; }
+.voice-bubble .wave span { width:3px; background:#007AFF; border-radius:2px; animation:wave 0.6s ease-in-out infinite; }
+.voice-bubble .wave span:nth-child(1){height:12px;animation-delay:0s}
+.voice-bubble .wave span:nth-child(2){height:20px;animation-delay:0.1s}
+.voice-bubble .wave span:nth-child(3){height:8px;animation-delay:0.2s}
+.voice-bubble .wave span:nth-child(4){height:16px;animation-delay:0.3s}
+.voice-bubble .dur { color:#8E8E93; font-size:12px; }
+@keyframes wave { 0%,100%{transform:scaleY(1)}50%{transform:scaleY(0.4)} }
 .typing-indicator {
-  display: flex; gap: 4px; padding: 12px 16px; align-items: center;
-  animation: msgIn 0.2s ease-out;
+  display:flex; gap:4px; padding:12px 16px; align-items:center; animation:msgIn 0.2s ease-out;
 }
-.typing-indicator span {
-  width: 7px; height: 7px; border-radius: 50%; background: #8E8E93;
-  animation: typing 1.2s ease-in-out infinite;
-}
-.typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-.typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-@keyframes typing { 0%,60%,100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-6px); opacity: 1; } }
+.typing-indicator span { width:7px; height:7px; border-radius:50%; background:#8E8E93; animation:typing 1.2s ease-in-out infinite; }
+.typing-indicator span:nth-child(2){animation-delay:0.2s}
+.typing-indicator span:nth-child(3){animation-delay:0.4s}
+@keyframes typing { 0%,60%,100%{transform:translateY(0);opacity:0.4}30%{transform:translateY(-6px);opacity:1} }
 
-/* Incoming Call Overlay */
+/* Episode Select */
+.episode-screen {
+  position:absolute; inset:0; background:#000; z-index:100; overflow-y:auto; padding:60px 20px 40px;
+}
+.episode-screen h1 { color:#fff; font-size:22px; text-align:center; margin-bottom:4px; }
+.episode-screen .subtitle { color:#8E8E93; font-size:13px; text-align:center; margin-bottom:24px; }
+.episode-card {
+  background:#1C1C1E; border-radius:16px; padding:16px; margin-bottom:12px;
+  border:0.5px solid rgba(255,255,255,0.08); cursor:pointer; transition:transform 0.2s, border-color 0.2s;
+}
+.episode-card:active { transform:scale(0.97); }
+.episode-card .ep-emoji { font-size:32px; margin-bottom:8px; }
+.episode-card .ep-title { color:#fff; font-size:16px; font-weight:700; margin-bottom:4px; }
+.episode-card .ep-desc { color:#8E8E93; font-size:13px; line-height:1.4; }
+.episode-card .ep-source { color:#FF6B35; font-size:11px; margin-top:6px; }
+.episode-card.completed { border-color:rgba(52,199,89,0.3); }
+.episode-card.completed::after { content: '✅ 已通关'; color:#34C759; font-size:11px; float:right; }
+
 .call-overlay {
-  position: absolute; inset: 0; background: #0a0a0a;
-  z-index: 50; display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  animation: callIn 0.4s ease-out;
-  display: none;
+  position:absolute; inset:0; background:#0a0a0a; z-index:50;
+  display:none; flex-direction:column; align-items:center; justify-content:center;
 }
-.call-overlay.active { display: flex; }
-@keyframes callIn { from { transform: scale(1.2); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
+.call-overlay.active { display:flex; animation:callIn 0.4s ease-out; }
+@keyframes callIn { from{transform:scale(1.2);opacity:0}to{transform:scale(1);opacity:1} }
 .call-avatar {
-  width: 90px; height: 90px; border-radius: 50%;
-  background: linear-gradient(135deg, #FF6B35, #D32F2F);
-  display: flex; align-items: center; justify-content: center;
-  color: #fff; font-size: 36px; font-weight: 700; margin-bottom: 16px;
-  animation: callPulse 1.5s ease-in-out infinite;
+  width:90px; height:90px; border-radius:50%;
+  background:linear-gradient(135deg,#FF6B35,#D32F2F);
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-size:36px; font-weight:700; margin-bottom:16px;
+  animation:callPulse 1.5s ease-in-out infinite;
 }
-@keyframes callPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(255,107,53,0.4); } 50% { box-shadow: 0 0 0 30px rgba(255,107,53,0); } }
-.call-name { color: #fff; font-size: 28px; font-weight: 700; margin-bottom: 4px; }
-.call-label { color: #8E8E93; font-size: 16px; margin-bottom: 40px; letter-spacing: 1px; }
-.call-actions { display: flex; gap: 60px; }
+@keyframes callPulse { 0%,100%{box-shadow:0 0 0 0 rgba(255,107,53,0.4)}50%{box-shadow:0 0 0 30px rgba(255,107,53,0)} }
+.call-name { color:#fff; font-size:28px; font-weight:700; margin-bottom:4px; }
+.call-label { color:#8E8E93; font-size:16px; margin-bottom:40px; }
+.call-actions { display:flex; gap:60px; }
 .call-btn {
-  width: 68px; height: 68px; border-radius: 50%; border: none;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: transform 0.2s;
+  width:68px; height:68px; border-radius:50%; border:none;
+  display:flex; align-items:center; justify-content:center; cursor:pointer; transition:transform 0.2s;
 }
-.call-btn:active { transform: scale(0.9); }
-.call-btn.decline { background: #FF3B30; }
-.call-btn.accept { background: #34C759; }
-.call-btn svg { width: 32px; height: 32px; fill: #fff; }
-.call-btn-label { color: #fff; font-size: 13px; text-align: center; margin-top: 8px; }
+.call-btn:active { transform:scale(0.9); }
+.call-btn.decline { background:#FF3B30; }
+.call-btn.accept { background:#34C759; }
+.call-btn-label { color:#fff; font-size:13px; text-align:center; margin-top:8px; }
 
-/* Notification Banner */
 .notification-banner {
-  position: absolute; top: 54px; left: 0; right: 0; z-index: 40;
-  background: rgba(28,28,30,0.97); backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  padding: 14px 16px; display: flex; align-items: center; gap: 12px;
-  transform: translateY(-100%); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1.2);
-  border-bottom: 0.5px solid rgba(255,255,255,0.1);
+  position:absolute; top:54px; left:0; right:0; z-index:40;
+  background:rgba(28,28,30,0.97); backdrop-filter:blur(20px);
+  padding:14px 16px; display:flex; align-items:center; gap:12px;
+  transform:translateY(-100%); transition:transform 0.4s cubic-bezier(0.2,0.8,0.2,1.2);
+  border-bottom:0.5px solid rgba(255,255,255,0.1);
 }
-.notification-banner.show { transform: translateY(0); }
-.notif-icon {
-  width: 20px; height: 28px; border-radius: 5px;
-  background: linear-gradient(135deg, #FF6B35, #D32F2F);
-  flex-shrink: 0;
-}
-.notif-content { flex: 1; min-width: 0; }
-.notif-app { color: #8E8E93; font-size: 12px; }
-.notif-text { color: #fff; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.notif-time { color: #8E8E93; font-size: 11px; flex-shrink: 0; }
+.notification-banner.show { transform:translateY(0); }
+.notif-icon { width:20px; height:28px; border-radius:5px; background:linear-gradient(135deg,#FF6B35,#D32F2F); flex-shrink:0; }
+.notif-content { flex:1; min-width:0; }
+.notif-app { color:#8E8E93; font-size:12px; }
+.notif-text { color:#fff; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.notif-time { color:#8E8E93; font-size:11px; flex-shrink:0; }
 
-/* Decision Card Overlay */
 .decision-overlay {
-  position: absolute; bottom: 0; left: 0; right: 0; z-index: 30;
-  display: flex; flex-direction: column; align-items: center;
-  padding: 0 16px 40px;
-  pointer-events: none;
-  opacity: 0; transition: opacity 0.3s;
+  position:absolute; bottom:0; left:0; right:0; z-index:30;
+  display:flex; flex-direction:column; align-items:center;
+  padding:0 16px 40px; pointer-events:none; opacity:0; transition:opacity 0.3s;
 }
-.decision-overlay.active { opacity: 1; pointer-events: auto; }
-
+.decision-overlay.active { opacity:1; pointer-events:auto; }
 .decision-card {
-  width: 100%; background: rgba(28,28,30,0.98);
-  backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
-  border-radius: 20px; padding: 20px;
-  border: 0.5px solid rgba(255,255,255,0.12);
-  position: relative;
-  transform: translateX(0) rotate(0deg);
-  transition: transform 0.15s ease-out;
-  cursor: grab;
+  width:100%; background:rgba(28,28,30,0.98); backdrop-filter:blur(30px);
+  border-radius:20px; padding:20px; border:0.5px solid rgba(255,255,255,0.12);
+  cursor:grab; transition:transform 0.15s ease-out;
 }
-.decision-card:active { cursor: grabbing; }
-.decision-card.swiping { transition: none; }
-.decision-card.swipe-left { transform: translateX(-120%) rotate(-15deg); opacity: 0; transition: all 0.3s ease-in; }
-.decision-card.swipe-right { transform: translateX(120%) rotate(15deg); opacity: 0; transition: all 0.3s ease-in; }
-.decision-card.snap-back { transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1); }
-
-.decision-hint {
-  text-align: center; color: #8E8E93; font-size: 12px;
-  margin-bottom: 8px; letter-spacing: 2px;
-}
-
-.decision-prompt {
-  color: #fff; font-size: 15px; text-align: center;
-  margin-bottom: 20px; line-height: 1.5; font-weight: 500;
-}
-
-.decision-options {
-  display: flex; gap: 12px; justify-content: space-between;
-}
+.decision-card:active { cursor:grabbing; }
+.decision-card.swipe-left { transform:translateX(-120%) rotate(-15deg); opacity:0; transition:all 0.3s ease-in; }
+.decision-card.swipe-right { transform:translateX(120%) rotate(15deg); opacity:0; transition:all 0.3s ease-in; }
+.decision-card.snap-back { transition:transform 0.35s cubic-bezier(0.2,0.8,0.2,1); }
+.decision-hint { text-align:center; color:#8E8E93; font-size:12px; margin-bottom:8px; letter-spacing:2px; }
+.decision-prompt { color:#fff; font-size:15px; text-align:center; margin-bottom:20px; line-height:1.5; font-weight:500; }
+.decision-options { display:flex; gap:12px; justify-content:space-between; }
 .decision-option {
-  flex: 1; padding: 14px 10px; border-radius: 14px;
-  text-align: center; font-size: 14px; font-weight: 600;
-  line-height: 1.4; cursor: pointer;
-  transition: transform 0.2s, opacity 0.2s;
-  pointer-events: auto;
+  flex:1; padding:14px 10px; border-radius:14px; text-align:center;
+  font-size:14px; font-weight:600; line-height:1.4; cursor:pointer; pointer-events:auto; transition:transform 0.2s;
 }
-.decision-option:active { transform: scale(0.95); }
-.decision-option.left {
-  background: rgba(255,59,48,0.15); color: #FF453A;
-  border: 1px solid rgba(255,59,48,0.3);
-}
-.decision-option.right {
-  background: rgba(0,122,255,0.15); color: #0A84FF;
-  border: 1px solid rgba(0,122,255,0.3);
-}
-.decision-swipe-hint {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-top: 14px; color: #8E8E93; font-size: 11px;
-}
-.decision-swipe-hint .left-hint { color: #FF453A; }
-.decision-swipe-hint .right-hint { color: #0A84FF; }
-.decision-swipe-hint .mid { letter-spacing: 1px; }
+.decision-option:active { transform:scale(0.95); }
+.decision-option.left { background:rgba(255,59,48,0.15); color:#FF453A; border:1px solid rgba(255,59,48,0.3); }
+.decision-option.right { background:rgba(0,122,255,0.15); color:#0A84FF; border:1px solid rgba(0,122,255,0.3); }
+.decision-swipe-hint { display:flex; justify-content:space-between; align-items:center; margin-top:14px; color:#8E8E93; font-size:11px; }
+.decision-swipe-hint .left-hint { color:#FF453A; }
+.decision-swipe-hint .right-hint { color:#0A84FF; }
 
-/* Left/Right glow indicators on edge */
 .swipe-edge-indicator {
-  position: absolute; top: 50%; transform: translateY(-50%);
-  width: 50px; height: 50px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 24px; opacity: 0; transition: opacity 0.2s;
-  pointer-events: none; z-index: 31;
+  position:absolute; top:50%; transform:translateY(-50%); width:50px; height:50px;
+  border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:24px; opacity:0; transition:opacity 0.2s; pointer-events:none; z-index:31;
 }
-.swipe-edge-indicator.left { left: 8px; background: rgba(255,59,48,0.2); }
-.swipe-edge-indicator.right { right: 8px; background: rgba(0,122,255,0.2); }
-.swipe-edge-indicator.show { opacity: 1; }
+.swipe-edge-indicator.left { left:8px; background:rgba(255,59,48,0.2); }
+.swipe-edge-indicator.right { right:8px; background:rgba(0,122,255,0.2); }
+.swipe-edge-indicator.show { opacity:1; }
 
-/* Ending Overlay */
 .ending-overlay {
-  position: absolute; inset: 0; background: rgba(0,0,0,0.92);
-  z-index: 60; display: flex; flex-direction: column;
-  align-items: center; justify-content: center; padding: 30px;
-  opacity: 0; pointer-events: none; transition: opacity 0.5s;
+  position:absolute; inset:0; background:rgba(0,0,0,0.92); z-index:60;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; padding:30px;
+  opacity:0; pointer-events:none; transition:opacity 0.5s;
 }
-.ending-overlay.active { opacity: 1; pointer-events: auto; }
+.ending-overlay.active { opacity:1; pointer-events:auto; }
 .ending-card {
-  background: #1C1C1E; border-radius: 24px; padding: 30px 24px;
-  width: 100%; max-width: 320px; text-align: center;
-  border: 0.5px solid rgba(255,255,255,0.15);
-  animation: endingBounce 0.6s cubic-bezier(0.2, 0.8, 0.2, 1.3);
+  background:#1C1C1E; border-radius:24px; padding:30px 24px;
+  width:100%; max-width:320px; text-align:center;
+  border:0.5px solid rgba(255,255,255,0.15);
+  animation:endingBounce 0.6s cubic-bezier(0.2,0.8,0.2,1.3);
 }
-@keyframes endingBounce { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-.ending-emoji { font-size: 64px; margin-bottom: 12px; }
-.ending-title { color: #fff; font-size: 26px; font-weight: 800; margin-bottom: 6px; }
-.ending-subtitle { color: #8E8E93; font-size: 14px; margin-bottom: 20px; line-height: 1.5; }
-.ending-stats { display: flex; gap: 16px; justify-content: center; margin-bottom: 24px; }
-.ending-stat { text-align: center; }
-.ending-stat-val { color: #fff; font-size: 22px; font-weight: 700; }
-.ending-stat-label { color: #8E8E93; font-size: 11px; margin-top: 2px; }
+@keyframes endingBounce { from{transform:scale(0.8);opacity:0}to{transform:scale(1);opacity:1} }
+.ending-emoji { font-size:64px; margin-bottom:12px; }
+.ending-title { color:#fff; font-size:26px; font-weight:800; margin-bottom:6px; }
+.ending-subtitle { color:#8E8E93; font-size:14px; margin-bottom:20px; line-height:1.5; }
+.ending-stats { display:flex; gap:16px; justify-content:center; margin-bottom:24px; }
+.ending-stat { text-align:center; }
+.ending-stat-val { color:#fff; font-size:22px; font-weight:700; }
+.ending-stat-label { color:#8E8E93; font-size:11px; margin-top:2px; }
 .ending-share {
-  background: linear-gradient(135deg, #FF6B35, #D32F2F);
-  color: #fff; border: none; padding: 14px 40px; border-radius: 25px;
-  font-size: 16px; font-weight: 700; cursor: pointer; letter-spacing: 1px;
-  transition: transform 0.2s;
+  background:linear-gradient(135deg,#FF6B35,#D32F2F);
+  color:#fff; border:none; padding:14px 40px; border-radius:25px;
+  font-size:16px; font-weight:700; cursor:pointer; letter-spacing:1px; transition:transform 0.2s;
 }
-.ending-share:active { transform: scale(0.95); }
+.ending-share:active { transform:scale(0.95); }
 .ending-restart {
-  background: transparent; color: #007AFF; border: none;
-  padding: 12px; font-size: 15px; cursor: pointer; margin-top: 8px;
+  background:transparent; color:#007AFF; border:none; padding:12px; font-size:15px; cursor:pointer; margin-top:8px;
 }
 
-/* Shake animation */
-.shake { animation: shake 0.5s ease-in-out; }
-@keyframes shake {
-  0%,100% { transform: translateX(0); }
-  10%,50%,90% { transform: translateX(-4px); }
-  30%,70% { transform: translateX(4px); }
-}
-
-/* Particle burst */
-.particles {
-  position: absolute; inset: 0; pointer-events: none; z-index: 65;
-}
-.particle {
-  position: absolute; width: 6px; height: 6px; border-radius: 50%;
-  animation: particleFly 0.8s ease-out forwards;
-}
-@keyframes particleFly {
-  from { opacity: 1; transform: translate(0,0) scale(1); }
-  to { opacity: 0; transform: translate(var(--dx),var(--dy)) scale(0); }
-}
-
-/* Stress meter */
 .stress-meter {
-  position: absolute; top: 60px; right: 10px; z-index: 35;
-  width: 6px; height: 120px; background: rgba(255,255,255,0.1);
-  border-radius: 3px; overflow: hidden;
-  transition: opacity 0.3s;
+  position:absolute; top:60px; right:10px; z-index:35;
+  width:6px; height:120px; background:rgba(255,255,255,0.1); border-radius:3px; overflow:hidden;
 }
 .stress-fill {
-  position: absolute; bottom: 0; width: 100%;
-  border-radius: 3px; transition: height 0.5s ease-out, background 0.5s;
-  background: var(--success);
+  position:absolute; bottom:0; width:100%; border-radius:3px;
+  transition:height 0.5s ease-out, background 0.5s; background:var(--success);
 }
-.stress-label {
-  position: absolute; top: -18px; left: 50%; transform: translateX(-50%);
-  font-size: 9px; color: #8E8E93; white-space: nowrap;
-}
-
-/* Toast */
+.stress-label { position:absolute; top:-18px; left:50%; transform:translateX(-50%); font-size:9px; color:#8E8E93; white-space:nowrap; }
 .toast {
-  position: absolute; top: 60px; left: 50%; transform: translateX(-50%);
-  background: rgba(28,28,30,0.95); color: #fff; padding: 8px 20px;
-  border-radius: 20px; font-size: 13px; z-index: 45;
-  opacity: 0; transition: opacity 0.3s; pointer-events: none;
+  position:absolute; top:60px; left:50%; transform:translateX(-50%);
+  background:rgba(28,28,30,0.95); color:#fff; padding:8px 20px;
+  border-radius:20px; font-size:13px; z-index:45; opacity:0; transition:opacity 0.3s; pointer-events:none;
 }
-.toast.show { opacity: 1; }
-
-/* Desktop cursor for card */
-@media (hover: hover) {
-  .decision-card:hover { /* subtle hint */ }
-}
+.toast.show { opacity:1; }
+.shake { animation:shake 0.5s ease-in-out; }
+@keyframes shake { 0%,100%{transform:translateX(0)}10%,50%,90%{transform:translateX(-4px)}30%,70%{transform:translateX(4px)} }
+.particles { position:absolute; inset:0; pointer-events:none; z-index:65; }
+.particle { position:absolute; width:6px; height:6px; border-radius:50%; animation:particleFly 0.8s ease-out forwards; }
+@keyframes particleFly { from{opacity:1;transform:translate(0,0)scale(1)}to{opacity:0;transform:translate(var(--dx),var(--dy))scale(0)} }
 </style>
 </head>
 <body>
 
 <div class="phone" id="phone">
-  <!-- Notch -->
   <div class="notch"></div>
-
-  <!-- Status Bar -->
-  <div class="status-bar">
-    <span class="time" id="gameTime">9:41</span>
-    <span class="icons">
-      <svg width="16" height="11" viewBox="0 0 16 11"><rect x="0" y="7" width="2" height="4" rx="0.5" fill="#fff"/><rect x="3" y="5.5" width="2" height="5.5" rx="0.5" fill="#fff"/><rect x="6" y="3.5" width="2" height="7.5" rx="0.5" fill="#fff"/><rect x="9" y="0" width="2" height="11" rx="0.5" fill="#fff"/></svg>
-      <span style="font-size:11px">5G</span>
-      <svg width="24" height="12" viewBox="0 0 24 12"><rect x="0" y="0" width="21" height="12" rx="3" stroke="#fff" stroke-width="1.2" fill="none"/><rect x="2" y="2" width="15" height="8" rx="1.5" fill="#fff"/></svg>
-    </span>
-  </div>
-
-  <!-- Chat Header -->
+  <div class="status-bar"><span class="time" id="gameTime">9:41</span></div>
   <div class="chat-header">
-    <span class="back">‹ 返回</span>
-    <div class="avatar">王</div>
-    <div>
-      <span class="name">王总 <span style="font-size:10px;color:gold;">💎VIP客户</span></span>
-      <span class="status">● 在线</span>
-    </div>
+    <span class="avatar" id="npcAvatar">王</span>
+    <span class="name" id="npcName">王总 <span style="font-size:10px;color:gold;">💎VIP</span></span>
   </div>
-
-  <!-- Chat Area -->
   <div class="chat-area" id="chatArea"></div>
-
-  <!-- Stress Meter -->
-  <div class="stress-meter" id="stressMeter">
-    <div class="stress-label">😰压力</div>
-    <div class="stress-fill" id="stressFill" style="height:20%;background:#34C759;"></div>
-  </div>
-
-  <!-- Toast -->
+  <div class="stress-meter"><div class="stress-label">😰压力</div><div class="stress-fill" id="stressFill" style="height:20%"></div></div>
   <div class="toast" id="toast"></div>
-
-  <!-- Notification Banner -->
   <div class="notification-banner" id="notifBanner">
-    <div class="notif-icon"></div>
-    <div class="notif-content">
-      <div class="notif-app">微信 · 王总</div>
-      <div class="notif-text" id="notifText"></div>
-    </div>
-    <div class="notif-time">刚刚</div>
+    <div class="notif-icon"></div><div class="notif-content"><div class="notif-app">微信</div><div class="notif-text" id="notifText"></div></div><div class="notif-time">刚刚</div>
   </div>
-
-  <!-- Incoming Call Overlay -->
   <div class="call-overlay" id="callOverlay">
-    <div class="call-avatar">王</div>
-    <div class="call-name">王总</div>
+    <div class="call-avatar" id="callAvatar">王</div>
+    <div class="call-name" id="callName">王总</div>
     <div class="call-label">📞 语音通话邀请</div>
     <div class="call-actions">
-      <div style="text-align:center">
-        <button class="call-btn decline" onclick="handleCall(false)">
-          <svg viewBox="0 0 24 24"><path d="M22 4.5L12.5 14l1.4 1.5L23.5 6z"/><path d="M4.9 3.7l-.6.6L17.5 18.3H21V6.1L9.2 17.9 7.8 16.5 19.6 4.7z"/></svg>
-        </button>
-        <div class="call-btn-label">挂断</div>
-      </div>
-      <div style="text-align:center">
-        <button class="call-btn accept" onclick="handleCall(true)">
-          <svg viewBox="0 0 24 24"><path d="M6.5 4.3c.9-.6 2-.4 2.6.5L9.6 6l-1.3 1.7c-.2.3-.2.7 0 1a10.2 10.2 0 0 0 7 7c.3.2.7.2 1 0L18 14.4l1.2.5c.9.6 1.1 1.7.5 2.6l-1 1.5c-.6.9-1.7 1.2-2.7.8-2.7-1.1-5.5-3-7.8-5.3s-4.2-5.1-5.3-7.8c-.4-1 .1-2.1.8-2.7l1.5-1z"/></svg>
-        </button>
-        <div class="call-btn-label">接听</div>
-      </div>
+      <div style="text-align:center"><button class="call-btn decline" onclick="handleCall(false)">✕</button><div class="call-btn-label">挂断</div></div>
+      <div style="text-align:center"><button class="call-btn accept" onclick="handleCall(true)">✓</button><div class="call-btn-label">接听</div></div>
     </div>
   </div>
-
-  <!-- Decision Overlay -->
   <div class="decision-overlay" id="decisionOverlay">
     <div class="decision-hint">👆 左滑或右滑做出选择</div>
     <div class="decision-card" id="decisionCard">
@@ -437,30 +264,20 @@ body {
         <div class="decision-option left" id="optionLeft">← 左滑选择</div>
         <div class="decision-option right" id="optionRight">右滑选择 →</div>
       </div>
-      <div class="decision-swipe-hint">
-        <span class="left-hint">◁ 左滑</span>
-        <span class="mid">滑动选择</span>
-        <span class="right-hint">右滑 ▷</span>
-      </div>
+      <div class="decision-swipe-hint"><span class="left-hint">◁ 左滑</span><span class="mid">滑动选择</span><span class="right-hint">右滑 ▷</span></div>
     </div>
   </div>
-
-  <!-- Left/Right Swipe Edge Indicators -->
   <div class="swipe-edge-indicator left" id="swipeLeft">◁</div>
   <div class="swipe-edge-indicator right" id="swipeRight">▷</div>
-
-  <!-- Ending Overlay -->
-  <div class="ending-overlay" id="endingOverlay">
-    <div class="ending-card" id="endingCard"></div>
-    <button class="ending-restart" onclick="restartGame()">🔄 再来一局</button>
-  </div>
-
-  <!-- Particles -->
+  <div class="ending-overlay" id="endingOverlay"><div class="ending-card" id="endingCard"></div><button class="ending-restart" onclick="backToEpisodes()">📋 返回关卡选择</button></div>
   <div class="particles" id="particles"></div>
+  <div class="episode-screen" id="episodeScreen"></div>
 </div>
 
 <script>
-// ── Game Engine ──────────────────────────────────
+// ═══════════════════════════════════════
+// GAME ENGINE
+// ═══════════════════════════════════════
 const chatArea = document.getElementById('chatArea');
 const decisionOverlay = document.getElementById('decisionOverlay');
 const decisionCard = document.getElementById('decisionCard');
@@ -477,777 +294,714 @@ const gameTime = document.getElementById('gameTime');
 const stressFill = document.getElementById('stressFill');
 const swipeLeft = document.getElementById('swipeLeft');
 const swipeRight = document.getElementById('swipeRight');
+const episodeScreen = document.getElementById('episodeScreen');
 
-let stressLevel = 20;
-let currentDecision = null; // { left: {label, next}, right: {label, next} }
-let messageQueue = [];
-let isTyping = false;
-let gameActive = true;
+let stressLevel = 20, currentDecision = null, gameActive = false, lastDirection = null;
+let callResolve = null, currentResolve = null;
 
-// ── Helpers ──────────────────────────────────────
 function setTime(t) { gameTime.textContent = t; }
 function setStress(v) {
   stressLevel = Math.max(0, Math.min(100, v));
   stressFill.style.height = stressLevel + '%';
-  if (stressLevel < 30) stressFill.style.background = '#34C759';
-  else if (stressLevel < 60) stressFill.style.background = '#FFCC00';
-  else stressFill.style.background = '#FF3B30';
+  stressFill.style.background = stressLevel < 30 ? '#34C759' : stressLevel < 60 ? '#FFCC00' : '#FF3B30';
 }
-
-function scrollChat() {
-  chatArea.scrollTop = chatArea.scrollHeight;
-}
-
-function addMessage(type, text, time) {
+function scrollChat() { chatArea.scrollTop = chatArea.scrollHeight; }
+function addMsg(type, text, time) {
   const row = document.createElement('div');
   row.className = 'msg-row ' + type;
   row.innerHTML = `<div class="msg-bubble">${text}</div>${time ? `<span class="msg-time">${time}</span>` : ''}`;
-  chatArea.appendChild(row);
-  scrollChat();
-  return row;
+  chatArea.appendChild(row); scrollChat();
 }
-
-function addVoiceMsg(time) {
+function addVoice(time) {
   const row = document.createElement('div');
   row.className = 'msg-row them';
-  row.innerHTML = `
-    <div class="voice-bubble" style="animation: msgIn 0.35s ease-out;">
-      <span style="font-size:20px;">🔊</span>
-      <div class="wave"><span></span><span></span><span></span><span></span></div>
-      <span class="dur">0:18</span>
-    </div>
-    <span class="msg-time">${time}</span>`;
-  chatArea.appendChild(row);
-  scrollChat();
+  row.innerHTML = `<div class="voice-bubble"><span style="font-size:20px">🔊</span><div class="wave"><span></span><span></span><span></span><span></span></div><span class="dur">0:18</span></div><span class="msg-time">${time}</span>`;
+  chatArea.appendChild(row); scrollChat();
 }
-
-function addInfoMsg(text) {
-  addMessage('info', text);
-}
-
-function showTyping(duration) {
-  return new Promise(resolve => {
+function addInfo(text) { addMsg('info', text); }
+function showTyping(d) {
+  return new Promise(r => {
     const el = document.createElement('div');
     el.className = 'typing-indicator';
     el.innerHTML = '<span></span><span></span><span></span>';
-    chatArea.appendChild(el);
-    scrollChat();
-    setTimeout(() => { el.remove(); resolve(); }, duration);
+    chatArea.appendChild(el); scrollChat();
+    setTimeout(() => { el.remove(); r(); }, d);
   });
 }
-
-function showToast(msg, duration = 2000) {
-  toast.textContent = msg;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), duration);
+function showToast(msg, d = 2000) {
+  toast.textContent = msg; toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), d);
 }
-
-function showNotification(text, duration = 2500) {
-  notifText.textContent = text;
-  notifBanner.classList.add('show');
-  // vibrate visual
+function showNotif(text, d = 2500) {
+  notifText.textContent = text; notifBanner.classList.add('show');
   document.getElementById('phone').classList.add('shake');
   setTimeout(() => document.getElementById('phone').classList.remove('shake'), 500);
-  setTimeout(() => notifBanner.classList.remove('show'), duration);
+  setTimeout(() => notifBanner.classList.remove('show'), d);
 }
-
 function spawnParticles(color = '#FF6B35') {
-  const container = document.getElementById('particles');
+  const c = document.getElementById('particles');
   for (let i = 0; i < 20; i++) {
     const p = document.createElement('div');
-    p.className = 'particle';
-    p.style.background = color;
-    p.style.left = '50%';
-    p.style.top = '50%';
+    p.className = 'particle'; p.style.background = color;
+    p.style.left = '50%'; p.style.top = '50%';
     p.style.setProperty('--dx', (Math.random() - 0.5) * 300 + 'px');
     p.style.setProperty('--dy', (Math.random() - 0.5) * 300 + 'px');
-    container.appendChild(p);
-    setTimeout(() => p.remove(), 800);
+    c.appendChild(p); setTimeout(() => p.remove(), 800);
   }
 }
 
-// ── Decision System ──────────────────────────────
-let currentResolve = null;
-let lastDirection = null; // tracks which way the user swiped
-
-function showDecision(prompt, leftLabel, rightLabel, leftNext, rightNext) {
+// Decision system
+function showDecision(prompt, leftL, rightL) {
   return new Promise(resolve => {
     currentResolve = resolve;
     decisionPrompt.textContent = prompt;
-    optionLeft.textContent = leftLabel;
-    optionRight.textContent = rightLabel;
-    currentDecision = { left: { label: leftLabel, next: leftNext }, right: { label: rightLabel, next: rightNext } };
+    optionLeft.textContent = leftL;
+    optionRight.textContent = rightL;
+    currentDecision = { left: { label: leftL }, right: { label: rightL } };
     decisionOverlay.classList.add('active');
     decisionCard.classList.remove('swipe-left', 'swipe-right');
     decisionCard.style.transform = 'translateX(0) rotate(0deg)';
-    swipeLeft.classList.remove('show');
-    swipeRight.classList.remove('show');
+    swipeLeft.classList.remove('show'); swipeRight.classList.remove('show');
   });
 }
-
-function makeChoice(direction) {
+function makeChoice(dir) {
   if (!currentDecision || !gameActive) return;
-  lastDirection = direction;
-  const choice = direction === 'left' ? currentDecision.left : currentDecision.right;
-
-  // Animate card
-  decisionCard.classList.add(direction === 'left' ? 'swipe-left' : 'swipe-right');
-
+  lastDirection = dir;
+  decisionCard.classList.add(dir === 'left' ? 'swipe-left' : 'swipe-right');
   setTimeout(() => {
     decisionOverlay.classList.remove('active');
     decisionCard.classList.remove('swipe-left', 'swipe-right');
-    swipeLeft.classList.remove('show');
-    swipeRight.classList.remove('show');
+    swipeLeft.classList.remove('show'); swipeRight.classList.remove('show');
     currentDecision = null;
-    if (currentResolve) {
-      const cb = currentResolve;
-      currentResolve = null;
-      cb(choice);
-    }
+    if (currentResolve) { const cb = currentResolve; currentResolve = null; cb(dir); }
   }, 300);
 }
-
-// Touch/Mouse swipe on decision card
-let swipeStartX = 0, swipeStartY = 0, swipeActive = false, swipeOffsetX = 0;
-
-decisionCard.addEventListener('pointerdown', e => {
-  if (!gameActive) return;
-  swipeStartX = e.clientX; swipeStartY = e.clientY;
-  swipeActive = true; swipeOffsetX = 0;
-  decisionCard.classList.add('swiping');
-  decisionCard.setPointerCapture(e.pointerId);
-});
-
-decisionCard.addEventListener('pointermove', e => {
-  if (!swipeActive) return;
-  const dx = e.clientX - swipeStartX;
-  const dy = e.clientY - swipeStartY;
-  swipeOffsetX = dx;
-  // Only track horizontal swipes
-  const rotation = dx * 0.05;
-  decisionCard.style.transform = `translateX(${dx}px) rotate(${rotation}deg)`;
-
-  // Show edge indicators
-  if (dx < -40) { swipeLeft.classList.add('show'); swipeRight.classList.remove('show'); }
-  else if (dx > 40) { swipeRight.classList.add('show'); swipeLeft.classList.remove('show'); }
-  else { swipeLeft.classList.remove('show'); swipeRight.classList.remove('show'); }
-});
-
-decisionCard.addEventListener('pointerup', e => {
-  if (!swipeActive) return;
-  swipeActive = false;
-  decisionCard.classList.remove('swiping');
-  decisionCard.classList.add('snap-back');
-  swipeLeft.classList.remove('show');
-  swipeRight.classList.remove('show');
-
-  if (swipeOffsetX < -80) {
-    makeChoice('left');
-  } else if (swipeOffsetX > 80) {
-    makeChoice('right');
-  } else {
-    decisionCard.style.transform = 'translateX(0) rotate(0deg)';
-  }
-  setTimeout(() => decisionCard.classList.remove('snap-back'), 350);
-});
-
-// Click fallback
 optionLeft.addEventListener('click', () => makeChoice('left'));
 optionRight.addEventListener('click', () => makeChoice('right'));
-
-// Keyboard shortcuts
 document.addEventListener('keydown', e => {
   if (!currentDecision || !gameActive) return;
   if (e.key === 'ArrowLeft') makeChoice('left');
   if (e.key === 'ArrowRight') makeChoice('right');
 });
+// Touch swipe
+let sx = 0, sy = 0, sa = false, so = 0;
+decisionCard.addEventListener('pointerdown', e => {
+  if (!gameActive) return;
+  sx = e.clientX; sy = e.clientY; sa = true; so = 0;
+  decisionCard.classList.add('swiping'); decisionCard.setPointerCapture(e.pointerId);
+});
+decisionCard.addEventListener('pointermove', e => {
+  if (!sa) return;
+  so = e.clientX - sx;
+  decisionCard.style.transform = `translateX(${so}px) rotate(${so*0.05}deg)`;
+  if (so < -40) { swipeLeft.classList.add('show'); swipeRight.classList.remove('show'); }
+  else if (so > 40) { swipeRight.classList.add('show'); swipeLeft.classList.remove('show'); }
+  else { swipeLeft.classList.remove('show'); swipeRight.classList.remove('show'); }
+});
+decisionCard.addEventListener('pointerup', e => {
+  if (!sa) return; sa = false;
+  decisionCard.classList.remove('swiping'); decisionCard.classList.add('snap-back');
+  swipeLeft.classList.remove('show'); swipeRight.classList.remove('show');
+  if (so < -80) makeChoice('left');
+  else if (so > 80) makeChoice('right');
+  else decisionCard.style.transform = 'translateX(0) rotate(0deg)';
+  setTimeout(() => decisionCard.classList.remove('snap-back'), 350);
+});
 
-// ── Call System ──────────────────────────────────
-let callResolve = null;
-
-function triggerCall() {
+// Call system
+function triggerCall(name, avatar) {
+  document.getElementById('callName').textContent = name;
+  document.getElementById('callAvatar').textContent = avatar;
   return new Promise(resolve => {
-    callResolve = resolve;
-    callOverlay.classList.add('active');
+    callResolve = resolve; callOverlay.classList.add('active');
     document.getElementById('phone').classList.add('shake');
     setTimeout(() => document.getElementById('phone').classList.remove('shake'), 600);
   });
 }
-
 function handleCall(accepted) {
   callOverlay.classList.remove('active');
-  if (callResolve) {
-    const cb = callResolve;
-    callResolve = null;
-    cb(accepted);
-  }
+  if (callResolve) { const cb = callResolve; callResolve = null; cb(accepted); }
 }
 
-// ── Scene Runner ─────────────────────────────────
-async function runScene(messages, decisionData = null) {
-  for (const msg of messages) {
+// Scene runner
+async function runScene(msgs) {
+  for (const m of msgs) {
+    if (!gameActive) break;
     await new Promise(r => setTimeout(r, 300));
-
-    if (msg.type === 'info') {
-      addInfoMsg(msg.text);
-      if (msg.time) setTime(msg.time);
-    } else if (msg.type === 'them') {
-      await showTyping(msg.typing || 800);
-      addMessage('them', msg.text, msg.time);
-    } else if (msg.type === 'voice') {
-      await showTyping(400);
-      addVoiceMsg(msg.time);
-    } else if (msg.type === 'notification') {
-      showNotification(msg.text, msg.duration || 2500);
-      await new Promise(r => setTimeout(r, msg.wait || 1800));
-    } else if (msg.type === 'call') {
-      const accepted = await triggerCall();
-      if (accepted) {
-        // they spoke after call accepted
-        for (const line of msg.lines) {
-          await showTyping(line.typing || 600);
-          addMessage('them', line.text, line.time);
-        }
-      }
-    } else if (msg.type === 'me') {
-      addMessage('me', msg.text, msg.time);
-    } else if (msg.type === 'stress') {
-      setStress(stressLevel + msg.delta);
-      showToast(msg.toast || (msg.delta > 0 ? '😰 压力 +' + msg.delta : '😌 压力 ' + msg.delta));
-    } else if (msg.type === 'delay') {
-      await new Promise(r => setTimeout(r, msg.ms));
+    if (m.type === 'info') { addInfo(m.text); if (m.time) setTime(m.time); }
+    else if (m.type === 'them') { await showTyping(m.t || 800); addMsg('them', m.text, m.time); }
+    else if (m.type === 'me') { addMsg('me', m.text, m.time); }
+    else if (m.type === 'voice') { await showTyping(400); addVoice(m.time); }
+    else if (m.type === 'notif') { showNotif(m.text, m.d || 2500); await new Promise(r => setTimeout(r, m.w || 1800)); }
+    else if (m.type === 'call') {
+      const ok = await triggerCall(m.name, m.av);
+      if (ok) { for (const l of m.lines) { await showTyping(l.t || 600); addMsg('them', l.text, l.time); } }
     }
-  }
-
-  if (decisionData) {
-    const choice = await showDecision(
-      decisionData.prompt,
-      decisionData.left.label,
-      decisionData.right.label
-    );
-    return choice;
-  }
-  return null;
-}
-
-// ── The Story ────────────────────────────────────
-async function startGame() {
-  chatArea.innerHTML = '';
-  endingOverlay.classList.remove('active');
-  decisionOverlay.classList.remove('active');
-  callOverlay.classList.remove('active');
-  notifBanner.classList.remove('show');
-  gameActive = true;
-  setStress(20);
-  setTime('9:41');
-  currentDecision = null;
-  currentResolve = null;
-
-  // Brief intro
-  addInfoMsg('📱 周一 · 上午 9:41');
-
-  await runScene([
-    { type: 'delay', ms: 600 },
-    { type: 'them', text: '小李，周末让你改的方案，改好了吗？', typing: 1000, time: '9:41' },
-    { type: 'them', text: '客户那边催了三次了', typing: 600, time: '9:42' },
-    { type: 'them', text: '今天上午必须发过去。', typing: 800, time: '9:42' },
-  ], {
-    prompt: '面对王总的催促，你怎么回？',
-    left: { label: '😰 马上发（其实周末根本没改完）' },
-    right: { label: '😌 改好了，这就发（昨晚熬夜改完了）' },
-  });
-
-  // Branch 1
-  const c1 = await lastChoice;
-  setStress(c1.next === c1.left ? stressLevel + 15 : stressLevel - 5);
-  setStress(stressLevel);
-  if (c1.next === c1.left) {
-    // Left: lied about finishing
-    addMessage('me', '好的王总，马上发您！', '9:43');
-    await runScene([
-      { type: 'stress', delta: 15, toast: '😰 压力 +15（你根本没改）' },
-      { type: 'them', text: '快点。', typing: 400, time: '9:43' },
-      { type: 'them', text: '算了，我先看看你现在的版本。你现在发我。', typing: 1200, time: '9:45' },
-      { type: 'me', text: '好的...（慌乱中翻找旧版本）', time: '9:46' },
-      { type: 'them', text: '？？？', typing: 600, time: '9:48' },
-      { type: 'them', text: '这不是上上周的版本吗？你在逗我？', typing: 1000, time: '9:49' },
-      { type: 'stress', delta: 20, toast: '😰 压力 +20（被抓包了）' },
-    ]);
-  } else {
-    addMessage('me', '王总，周末刚好改完了，马上发给您。', '9:43');
-    await runScene([
-      { type: 'stress', delta: -5, toast: '😌 压力 -5（提前准备的感觉真好）' },
-      { type: 'them', text: '好。', typing: 400, time: '9:43' },
-      { type: 'them', text: '嗯...看完了。整体还行，但有几个地方要调。', typing: 1200, time: '9:50' },
-    ]);
-  }
-
-  // Scene 2: Mid-morning crisis
-  setTime('10:32');
-  addInfoMsg('⏰ 上午 10:32');
-
-  await runScene([
-    { type: 'notification', text: '💬 王总：小李你过来一下', duration: 2000, wait: 2000 },
-    { type: 'delay', ms: 600 },
-    { type: 'call', lines: [
-      { text: '小李啊，我刚跟客户通了电话', typing: 800 },
-      { text: '客户想要的是"高端大气上档次，低调奢华有内涵"', typing: 1500 },
-      { text: '你那个太素了', typing: 600 },
-      { text: '另外，logo要大一点，同时也要小一点', typing: 1200 },
-      { text: '颜色嘛...我要五彩斑斓的黑，你懂的', typing: 1000 },
-      { text: '下午三点前给我新方案。好吧？', typing: 1000 },
-    ]},
-  ], {
-    prompt: '王总提出了量子力学级别的需求。你怎么办？',
-    left: { label: '😤 "好的王总"（强忍怒火，先答应）' },
-    right: { label: '🤔 "王总，能具体说说五彩斑斓的黑是什么感觉吗？"' },
-  });
-
-  const c2 = await lastChoice;
-  if (c2.next === c2.left) {
-    addMessage('me', '好的王总，我马上改。', '10:35');
-    await runScene([
-      { type: 'stress', delta: 10, toast: '😰 压力 +10（五彩斑斓的黑是什么鬼）' },
-      { type: 'them', text: '很好。另外PPT也准备一下，明天汇报用。', typing: 1000, time: '10:36' },
-    ]);
-  } else {
-    addMessage('me', '王总，这个方向很有启发。能发我一个参考图吗？我看看客户喜欢的风格。', '10:35');
-    await runScene([
-      { type: 'stress', delta: -5, toast: '😌 压力 -5（沟通到位）' },
-      { type: 'them', text: '行，我让客户发几张参考过来。你先等着。', typing: 1000, time: '10:37' },
-      { type: 'them', text: '对了，PPT也准备一下，明天汇报用。', typing: 800, time: '10:38' },
-    ]);
-  }
-
-  // Scene 3: Afternoon pile-up
-  setTime('14:15');
-  addInfoMsg('⏰ 下午 2:15');
-
-  await runScene([
-    { type: 'notification', text: '💬 同事小张：李哥，王总让你顺便把下个月的策划案也出了', duration: 2500, wait: 2500 },
-    { type: 'delay', ms: 800 },
-    { type: 'them', text: '[转发聊天记录]', typing: 600, time: '14:16' },
-    { type: 'them', text: '客户又加了三个需求，你看一下', typing: 800, time: '14:17' },
-    { type: 'voice', time: '14:18' },
-    { type: 'them', text: '语音转文字：那个首页的banner啊，我觉得还可以再改改，就是那个感觉不太对，你懂我意思吧，就是那个...那个感觉，你改一下', typing: 1500, time: '14:19' },
-    { type: 'notification', text: '📅 提醒：17:00 部门周会', duration: 2000, wait: 1500 },
-    { type: 'delay', ms: 500 },
-    { type: 'them', text: '对了，方案改好了吗？客户在催了。', typing: 800, time: '14:25' },
-  ], {
-    prompt: '需求像雪崩一样涌来。你的策略是？',
-    left: { label: '😵 全部答应，默默扛下所有' },
-    right: { label: '📋 列个优先级清单发给王总确认' },
-  });
-
-  const c3 = await lastChoice;
-  if (c3.next === c3.left) {
-    addMessage('me', '好的王总，我都记下了，按顺序处理。', '14:26');
-    await runScene([
-      { type: 'stress', delta: 20, toast: '😰 压力 +20（爆表边缘）' },
-      { type: 'them', text: '行。反正今天都得出。', typing: 600, time: '14:27' },
-    ]);
-  } else {
-    addMessage('me', '王总，我整理了一下目前的任务清单，您看看优先级对不对：\n\n1. 方案修改（3点前）\n2. 明天汇报PPT\n3. 客户新增的3个需求\n4. 下月策划案\n\n第3、4项可能要明天才能交付。', '14:27');
-    await runScene([
-      { type: 'stress', delta: -10, toast: '😌 压力 -10（条理清晰）' },
-      { type: 'them', text: '嗯...策划案可以后天。其他的今天搞定。', typing: 1000, time: '14:29' },
-    ]);
-  }
-
-  // Scene 4: The 5:30pm bomb
-  setTime('17:28');
-  addInfoMsg('⏰ 下午 5:28');
-
-  await runScene([
-    { type: 'notification', text: '💬 王总：[文件] 客户新方向.pdf', duration: 2500, wait: 2000 },
-    { type: 'delay', ms: 500 },
-    { type: 'them', text: '小李，客户全盘推翻了', typing: 1000, time: '17:29' },
-    { type: 'them', text: '新方向我发你了', typing: 600, time: '17:29' },
-    { type: 'them', text: '明天早上9点客户来公司现场看', typing: 1000, time: '17:30' },
-    { type: 'them', text: '你今晚辛苦一下，明天早上8点前发我。', typing: 1200, time: '17:31' },
-    { type: 'them', text: '别让我失望。', typing: 800, time: '17:31' },
-  ], {
-    prompt: '17:31，下班前2分钟，一周的工作被全盘推翻。你——',
-    left: { label: '😭 "好的，我今晚通宵。"' },
-    right: { label: '💪 "王总，我需要跟你谈一下。"' },
-  });
-
-  const c4 = await lastChoice;
-  if (c4.next === c4.left) {
-    addMessage('me', '好的王总，我今晚搞定。', '17:32');
-    await runScene([
-      { type: 'stress', delta: 30, toast: '🤯 压力 +30（极限）' },
-      { type: 'them', text: '很好。明天见。', typing: 500, time: '17:32' },
-      { type: 'delay', ms: 1000 },
-    ]);
-
-    // Ending branch: total submission
-    setTime('23:47');
-    addInfoMsg('⏰ 深夜 23:47 · 办公室只剩你一个人');
-    await runScene([
-      { type: 'notification', text: '💬 王总：刚想起来，配色换成莫兰迪色系，logo再大20%', duration: 3000, wait: 2500 },
-      { type: 'them', text: '还有，客户说想要那种"呼吸感"，你知道的吧', typing: 1200, time: '23:48' },
-    ], {
-      prompt: '凌晨，你还在办公室，王总又加需求了——',
-      left: { label: '😡 "王总，我不干了！！！"' },
-      right: { label: '🥲 "好的，我再改改。"' },
-    });
-  } else {
-    addMessage('me', '王总，我想跟你聊一下。\n\n这一周的需求变化：\n周一：方案A\n周三：方案B\n现在周四17:30：全盘推翻→方案C\n\n我理解客户的需求很重要。但如果每次都是最后时刻推翻重来，团队没法保证质量。\n\n我的建议：今晚我先出一个框架和核心页面，明早给客户看方向。细节我们在会议现场调整。', '17:33');
-    await runScene([
-      { type: 'stress', delta: -15, toast: '😤 压力 -15（说出来了！）' },
-      { type: 'delay', ms: 3000 },
-      { type: 'them', text: '...', typing: 1500, time: '17:36' },
-      { type: 'them', text: '你说得对。', typing: 600, time: '17:37' },
-      { type: 'them', text: '最近确实变化太多了。客户那边我去沟通。', typing: 1200, time: '17:38' },
-      { type: 'them', text: '你先出框架，细节明天现场对。', typing: 1000, time: '17:39' },
-      { type: 'them', text: '另外...谢谢。', typing: 800, time: '17:40' },
-    ], {
-      prompt: '王总居然说了"谢谢"...但你今晚还是要加班。',
-      left: { label: '🏃 高效出框架，12点前回家' },
-      right: { label: '🔥 趁热打铁，出一个惊艳的框架' },
-    });
+    else if (m.type === 'stress') { setStress(stressLevel + m.d); showToast(m.toast || (m.d>0?'😰+'+m.d:'😌'+m.d)); }
+    else if (m.type === 'delay') { await new Promise(r => setTimeout(r, m.ms)); }
   }
 }
 
-// ── Endings ──────────────────────────────────────
-function showEnding(type) {
+// Ending
+const completedEpisodes = new Set();
+function showEnding(type, endings) {
   gameActive = false;
-  decisionOverlay.classList.remove('active');
-  callOverlay.classList.remove('active');
-
-  const endings = {
-    fired: {
-      emoji: '📦',
-      title: '你被炒了',
-      subtitle: '第二天早上，你因为通宵做的方案"缺少呼吸感"\n被王总当着全公司的面骂了一顿\n然后你情绪失控，把咖啡泼在了王总的衬衫上',
-      stats: { '😰 压力峰值': '95%', '😢 结局': '收拾东西走人', '📖 经验': '学会了说不' },
-      color: '#FF3B30',
-    },
-    promoted: {
-      emoji: '🏆',
-      title: '得到赏识',
-      subtitle: '你的专业和坚持让王总刮目相看\n客户对新框架非常满意\n三个月后，你成为了项目负责人',
-      stats: { '😌 压力控制': '45%', '🎉 结局': '升职加薪', '📖 经验': '敢于沟通是最好的武器' },
-      color: '#FFD700',
-    },
-    quit_epic: {
-      emoji: '🔥',
-      title: '你炒了甲方',
-      subtitle: '凌晨12点，你关掉电脑\n给王总发了一条消息：\n"王总，我不干了。五彩斑斓的黑，您自己调吧。"\n\n一周后，你开了自己的工作室。',
-      stats: { '😡 压力峰值': '100%', '🔥 结局': '华丽转身', '📖 经验': '不是所有甲方都值得伺候' },
-      color: '#FF6B35',
-    },
-    compromise: {
-      emoji: '🤝',
-      title: '苟住了',
-      subtitle: '你通宵改完方案\n客户勉强满意\n但你知道，下周还会再来一遍\n\n至少...这个月工资保住了。',
-      stats: { '😐 压力维持': '70%', '😮‍💨 结局': '熬过这轮', '📖 经验': '生存也是一种胜利' },
-      color: '#8E8E93',
-    },
-    boss_quit: {
-      emoji: '🤯',
-      title: '王总辞职了',
-      subtitle: '你连续三周的高效输出和专业态度\n让客户直接绕过王总找你对接\n王总被调去了分公司\n客户指定你为唯一对接人。',
-      stats: { '😎 压力掌控': '30%', '👑 结局': '你成了甲方', '📖 经验': '实力是最硬的通货' },
-      color: '#34C759',
-    },
-  };
-
+  decisionOverlay.classList.remove('active'); callOverlay.classList.remove('active');
   const e = endings[type];
   endingCard.innerHTML = `
     <div class="ending-emoji">${e.emoji}</div>
     <div class="ending-title" style="background:linear-gradient(135deg,${e.color},${e.color}88);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">${e.title}</div>
-    <div class="ending-subtitle">${e.subtitle.replace(/\n/g, '<br>')}</div>
+    <div class="ending-subtitle">${e.subtitle.replace(/\n/g,'<br>')}</div>
     <div class="ending-stats">
-      ${Object.entries(e.stats).map(([k,v]) => `
-        <div class="ending-stat">
-          <div class="ending-stat-val">${v}</div>
-          <div class="ending-stat-label">${k}</div>
-        </div>
-      `).join('')}
+      ${Object.entries(e.stats).map(([k,v]) => `<div class="ending-stat"><div class="ending-stat-val">${v}</div><div class="ending-stat-label">${k}</div></div>`).join('')}
     </div>
-    <button class="ending-share" onclick="shareEnding('${type}')">📤 分享结局</button>
+    <button class="ending-share" onclick="shareEnding('${type}','${e.share||''}')">📤 分享结局</button>
   `;
-  endingOverlay.classList.add('active');
-  spawnParticles(e.color);
-
-  // Track ending
-  setStress(type === 'fired' || type === 'quit_epic' ? 100 : type === 'boss_quit' ? 20 : 60);
+  endingOverlay.classList.add('active'); spawnParticles(e.color);
+  setStress(type.includes('bad') ? 90 : type.includes('good') ? 20 : 60);
+}
+function shareEnding(type, text) {
+  if (!text) text = '我在《甲方模拟器》里经历了魔幻职场一天！';
+  if (navigator.share) { navigator.share({ title:'甲方模拟器', text }).catch(()=>{}); }
+  else { navigator.clipboard.writeText(text).then(() => showToast('📋 已复制！')).catch(() => showToast('长按截屏分享 📱')); }
 }
 
-function shareEnding(type) {
-  const texts = {
-    fired: '我在《甲方模拟器》里被炒了 🥲 五彩斑斓的黑到底怎么调？试试你能不能活下来！',
-    promoted: '我在《甲方模拟器》里升职了 🏆 你也能在甲方手下活到升职吗？',
-    quit_epic: '我炒了甲方 🔥 "五彩斑斓的黑，您自己调吧" 看看你会怎么死？',
-    compromise: '我在《甲方模拟器》里苟住了...至少工资保住了 😮‍💨 你能活得比我好吗？',
-    boss_quit: '我成了甲方 👑 王总被我熬走了！来挑战你的职场生存能力！',
-  };
-  const text = texts[type] || texts.compromise;
-  if (navigator.share) {
-    navigator.share({ title: '甲方模拟器', text }).catch(() => {});
+// ═══════════════════════════════════════
+// EPISODES (based on real collected stories)
+// ═══════════════════════════════════════
+
+const EPISODES = [
+  {
+    id: 'designer_revenge', emoji: '🎨',
+    title: '设计尸的反击',
+    desc: '甲方说"LOGO放大同时显小"，又说"设计是一坨屎"。当设计师甩出工资条的那一刻，甲方沉默了。',
+    source: '源自：豆瓣/网易 真实职场故事',
+  },
+  {
+    id: 'just_a_button', emoji: '💻',
+    title: '"就加一个按钮"',
+    desc: '产品经理说需求很简单——"对标微信就行"。甲方说"就加一个按钮"。当你说"好的"的那一刻，地狱开始了。',
+    source: '源自：知乎/V2EX 程序员血泪控诉',
+  },
+  {
+    id: 'screen_share_horror', emoji: '📱',
+    title: '共享屏幕社死现场',
+    desc: '你正在投屏给甲方看方案，突然弹出一条微信消息："这傻X又改需求"。全场安静了五秒。',
+    source: '源自：快传号/微博 真实社死名场面',
+  },
+  {
+    id: 'teambuilding_trap', emoji: '🏢',
+    title: '团建惊魂夜',
+    desc: '领导说"随便说说真心话"。新来的小王当真了。一个月后小王被优化，理由是"对公司文化认同度不高"。',
+    source: '源自：脉脉/知乎 职场避坑指南',
+  },
+  {
+    id: 'layoff_storm', emoji: '📦',
+    title: '裁员风暴眼',
+    desc: 'HR说这次是"人员优化"，给你N+3。你接还是不接？35岁被裁后，每一份JD都写着"35岁以下"。',
+    source: '源自：知乎/脉脉 真实裁员经历',
+  },
+  {
+    id: 'price_war', emoji: '💰',
+    title: '砍价的艺术',
+    desc: '甲方说"能不能便宜点"，你说可以。然后你涨了价，甲方反而签了。乙方谈判：贵有贵的道理。',
+    source: '源自：163.com/数英网 乙方谈判实录',
+  },
+];
+
+// ── EPISODE 1: 设计尸的反击 ──
+async function ep_designer_revenge() {
+  const NPC = { name: '王总', avatar: '王' };
+  document.getElementById('npcName').innerHTML = NPC.name + ' <span style="font-size:10px;color:gold;">💎甲方</span>';
+  document.getElementById('npcAvatar').textContent = NPC.avatar;
+  gameActive = true; setStress(15); setTime('9:30');
+  addInfo('📱 周三 · 上午 9:30 · 方案评审会');
+
+  await runScene([
+    { type:'delay', ms:500 },
+    { type:'them', text:'小李，这版方案我看了。', t:800, time:'9:31' },
+    { type:'them', text:'怎么说呢...整体感觉不太对。', t:1000, time:'9:32' },
+    { type:'them', text:'首先，LOGO要大一点，但是同时要显得小一点。你懂我意思吧？', t:1500, time:'9:33' },
+  ]);
+  const c1 = await showDecision(
+    '王总说LOGO要"大一点同时小一点"——你从业五年，还没翻译出这是什么意思。',
+    '😰 "好的王总，我调一下"（硬着头皮改）',
+    '🤔 "王总，您是说LOGO要更突出，但不要占太多版面？"'
+  );
+  if (c1 === 'left') {
+    addMsg('me','好的王总，我调一下。','9:34');
+    await runScene([
+      { type:'stress', d:10, toast:'😰 压力+10（完全没懂）' },
+      { type:'them', text:'不是...你这调的什么啊？', t:800, time:'9:46' },
+      { type:'them', text:'这个设计就是一坨屎。', t:1000, time:'9:47' },
+      { type:'delay', ms:1500 },
+    ]);
   } else {
-    navigator.clipboard.writeText(text).then(() => {
-      showToast('📋 已复制分享文案！');
-    }).catch(() => showToast('长按截屏分享吧 📱'));
+    addMsg('me','王总，您的意思是LOGO要更突出品牌，但不需要占据太多视觉空间对吧？我建议缩小LOGO尺寸但用对比色强化。','9:34');
+    await runScene([
+      { type:'stress', d:-5, toast:'😌 压力-5（精准翻译）' },
+      { type:'them', text:'对对对！就是这个意思！', t:600, time:'9:35' },
+      { type:'them', text:'但是整体感觉还是不对...', t:1000, time:'9:36' },
+      { type:'them', text:'说实话，这个设计就是一坨屎。', t:1200, time:'9:37' },
+    ]);
+  }
+
+  // Scene 2
+  addInfo('全场的目光都落在你身上。甲方代表王总当众说你的设计是"一坨屎"。');
+  const c2 = await showDecision(
+    '当甲方用情绪化语言攻击你的作品时——',
+    '😡 "王总，请您注意用词。（强压怒火）"',
+    '😏 "那您觉得哪部分最像屎？我分类处理。"'
+  );
+  if (c2 === 'left') {
+    addMsg('me','王总，请您注意用词。设计可以调整，但请尊重我们的工作。','9:38');
+    await runScene([
+      { type:'stress', d:15, toast:'😰 压力+15' },
+      { type:'them', text:'行行行，我说重了。但你自己看看，这能看吗？', t:1200, time:'9:39' },
+      { type:'them', text:'下午三点前给我新方案。散会。', t:800, time:'9:40' },
+    ]);
+  } else {
+    addMsg('me','王总，您觉得是颜色像，排版像，还是整体感觉像？我想分类处理，有针对性地改。','9:38');
+    await runScene([
+      { type:'stress', d:-10, toast:'😤 压力-10（专业拆解）' },
+      { type:'delay', ms:2000 },
+      { type:'them', text:'...算了，其实也没那么差。把颜色调暖一点就行。', t:1200, time:'9:40' },
+    ]);
+  }
+
+  // Scene 3 - THE REVEAL
+  setTime('14:00');
+  addInfo('⏰ 下午 2:00 · 你收到了一封邮件');
+  await runScene([
+    { type:'them', text:'小李，你这次的修改还是不行。', t:800, time:'14:01' },
+    { type:'them', text:'你知道XX设计院吗？人家做一个方案才收多少钱？', t:1000, time:'14:02' },
+    { type:'them', text:'我们这个预算给你已经很好了。', t:800, time:'14:03' },
+  ]);
+  const c3 = await showDecision(
+    '王总开始压价了。他说别家比你便宜多了。你手里刚好有设计院朋友的工资条——月薪2000，并行8个项目。',
+    '😤 "王总，我给您看个东西。"（甩出工资条对比）',
+    '😐 "好的王总，我再改改。"（忍气吞声）'
+  );
+  if (c3 === 'left') {
+    addMsg('me','王总，这是XX设计院设计师的工资条。\n\n月薪2000，并行8个项目，一人干三个人的活。\n\n您说的"便宜"是建立在对设计师的极限压榨上的。\n\n我的报价不高，是对我团队劳动的基本尊重。','14:05');
+    await runScene([
+      { type:'stress', d:-20, toast:'🔥 压力-20（说出来太爽了）' },
+      { type:'delay', ms:3000 },
+      { type:'them', text:'......', t:2000, time:'14:08' },
+      { type:'them', text:'我知道了。', t:1000, time:'14:09' },
+      { type:'them', text:'方案按你的节奏来。预算不变。', t:1200, time:'14:10' },
+    ]);
+    showEnding('won', ep1_endings);
+  } else {
+    addMsg('me','好的王总，我再改改。','14:05');
+    await runScene([
+      { type:'stress', d:25, toast:'🤯 压力+25（又一次妥协）' },
+      { type:'them', text:'嗯。这次别让我失望。', t:800, time:'14:06' },
+      { type:'delay', ms:1000 },
+    ]);
+    setTime('20:30');
+    addInfo('⏰ 晚上 8:30 · 你还在办公室改方案');
+    showEnding('burnout', ep1_endings);
   }
 }
 
-// ── Wire up final decisions ──────────────────────
-let lastChoice = null;
-const origShowDecision = showDecision;
-showDecision = function(prompt, leftLabel, rightLabel, leftNext, rightNext) {
-  return new Promise(resolve => {
-    origShowDecision(prompt, leftLabel, rightLabel).then(choice => {
-      lastChoice = choice;
-      resolve(choice);
-    });
-  });
+const ep1_endings = {
+  won: {
+    emoji:'🦁', title:'甲方闭嘴了',
+    subtitle:'你甩出工资条的数据让王总沉默了。\n他第一次意识到，压价挤压的不是乙方的利润，\n而是一个个活人的生存空间。\n方案按你的节奏推进，这个客户续约三年。',
+    stats:{'😤 压力峰值':'35%','🎯 结局':'赢得尊重','📖 经验':'用数据说话'}, color:'#34C759', share:'我在《甲方模拟器》里用工资条让甲方闭嘴了 🦁 你敢来试试吗？',
+  },
+  burnout: {
+    emoji:'🕯️', title:'又一个妥协的夜晚',
+    subtitle:'你又一次改到了深夜。\n甲方满意了，打折续约了。\n但你知道，这种压价模式永远不会改变。\n除非有人站出来说"不"。',
+    stats:{'🤯 压力峰值':'85%','😮‍💨 结局':'熬过今晚','📖 经验':'忍，也是一种生存'}, color:'#8E8E93',
+  },
 };
 
-// Override makeChoice to capture
-const origMakeChoice = makeChoice;
-makeChoice = function(direction) {
-  if (!currentDecision || !gameActive) return;
-  const choice = direction === 'left' ? currentDecision.left : currentDecision.right;
-  lastChoice = choice;
-  origMakeChoice(direction);
+// ── EPISODE 2: 就加一个按钮 ──
+async function ep_just_a_button() {
+  document.getElementById('npcName').innerHTML = '张总 <span style="font-size:10px;color:gold;">💎产品总监</span>';
+  document.getElementById('npcAvatar').textContent = '张';
+  gameActive = true; setStress(10); setTime('10:00');
+  addInfo('📱 周一 · 上午 10:00 · 需求评审会');
+
+  await runScene([
+    { type:'delay', ms:500 },
+    { type:'them', text:'这周的需求很简单。', t:800, time:'10:01' },
+    { type:'them', text:'就加一个小功能——一个按钮而已，应该很快吧？', t:1200, time:'10:02' },
+  ]);
+  addInfo('你打开需求文档，这个"一个按钮"需要：\n① 计算历史所有订单的加权平均评分\n② 根据用户浏览记录推荐相似商品\n③ 支持批量导出Excel并自动生成图表');
+  const c1 = await showDecision(
+    '一个按钮 = 三个独立模块，每个需要两周。产品经理说："你把三个功能放一个按钮里不就行了？"',
+    '😰 "好的张总，我评估一下工作量。"',
+    '🤨 "张总，这三个功能每个都是独立模块，我需要跟你对齐一下优先级。"'
+  );
+  if (c1 === 'left') {
+    addMsg('me','好的张总，我评估一下。','10:05');
+    await runScene([
+      { type:'stress', d:15, toast:'😰 压力+15（又要加班了）' },
+      { type:'them', text:'很好。另外这个功能对标微信就行，不用完全一样，80%就好。', t:1500, time:'10:07' },
+      { type:'them', text:'对了，还要支持语音消息、视频通话、文件传输，就这些基础功能。', t:1500, time:'10:09' },
+      { type:'them', text:'下周一上线。散会。', t:800, time:'10:10' },
+    ]);
+  } else {
+    addMsg('me','张总，我拆解一下：\n\n① 评分计算：涉及历史数据清洗，约2周\n② 推荐引擎：需要接入算法，约2周\n③ Excel导出：需要模版引擎，约1周\n\n三项共5周工作量。我建议先做③导出，这是客户最急的。①和②排下个迭代。','10:06');
+    await runScene([
+      { type:'stress', d:-10, toast:'😌 压力-10（专业拆解）' },
+      { type:'delay', ms:2000 },
+      { type:'them', text:'嗯...这么一说确实不是"一个按钮"。', t:1200, time:'10:08' },
+      { type:'them', text:'先做导出吧。其他的我跟客户再沟通。', t:1000, time:'10:09' },
+    ]);
+  }
+
+  // Scene 2: the avalanche
+  setTime('14:00');
+  addInfo('⏰ 下午 2:00');
+  await runScene([
+    { type:'notif', text:'💬 张总：客户又加了三个需求，你看一下', d:2000, w:1800 },
+    { type:'them', text:'对了，那个按钮做好了吗？客户在催。', t:800, time:'14:05' },
+    { type:'notif', text:'📅 提醒：本周五deadline', d:2000, w:1500 },
+  ]);
+  const c2 = await showDecision(
+    '需求像雪崩一样涌来。PM说了"对标微信80%"，又加了三个需求。你的策略是——',
+    '😵 全部答应，自己扛',
+    '📋 列优先级清单，让PM确认'
+  );
+  if (c2 === 'left') {
+    addMsg('me','好的，我都记下了。','14:06');
+    await runScene([
+      { type:'stress', d:25, toast:'🤯 压力+25' },
+    ]);
+    setTime('23:30');
+    addInfo('⏰ 深夜 23:30 · 全公司只剩你');
+    showEnding('996', ep2_endings);
+  } else {
+    addMsg('me','张总，我更新了优先级清单：\n\n🔴 P0: Excel导出（客户deadline）\n🟡 P1: 评分计算\n🟢 P2: 推荐引擎\n⚪ P3: 客户新增需求\n\nP3排下个迭代可以吗？','14:07');
+    await runScene([
+      { type:'stress', d:-10, toast:'😌 压力-10' },
+      { type:'them', text:'行。P3我跟客户说一下。', t:800, time:'14:09' },
+    ]);
+    setTime('18:30');
+    addInfo('⏰ 傍晚 6:30 · 今天准时下班');
+    showEnding('balance', ep2_endings);
+  }
+}
+
+const ep2_endings = {
+  '996': {
+    emoji:'🧟', title:'又一个996之夜',
+    subtitle:'你凌晨两点还在改"那个按钮"。\nPM说的"对标微信80%"，\n你可以用一生去追赶。\n周五deadline...应该能赶上吧？',
+    stats:{'🤯 压力峰值':'95%','😮‍💨 结局':'通宵加班','📖 经验':'学会说不'}, color:'#FF3B30',
+  },
+  balance: {
+    emoji:'🧘', title:'准时下班',
+    subtitle:'你把优先级清单发给PM后，\n他帮你挡掉了不合理的需求。\n今天准时六点半下班，\n同事惊讶地看着你收拾东西走出公司。',
+    stats:{'😌 压力峰值':'30%','🎉 结局':'准时下班','📖 经验':'对齐预期比埋头苦干重要'}, color:'#34C759',
+  },
 };
 
-// ── Run the full game ────────────────────────────
-// FIX: rewrite story as sequential async flow
-async function runFullGame() {
-  chatArea.innerHTML = '';
-  endingOverlay.classList.remove('active');
+// ── EPISODE 3: 共享屏幕社死 ──
+async function ep_screen_share_horror() {
+  document.getElementById('npcName').innerHTML = '刘总 <span style="font-size:10px;color:gold;">💎客户方</span>';
+  document.getElementById('npcAvatar').textContent = '刘';
+  gameActive = true; setStress(10); setTime('15:00');
+  addInfo('📱 周三 · 下午 3:00 · 远程方案演示');
+
+  await runScene([
+    { type:'delay', ms:500 },
+    { type:'them', text:'小李，你那边共享一下屏幕，我们过一下方案。', t:800, time:'15:01' },
+  ]);
+  addMsg('me','好的刘总，我共享屏幕。','15:02');
+  await runScene([
+    { type:'them', text:'嗯，整体方向还行...', t:800, time:'15:05' },
+    { type:'them', text:'等一下，这个配色我觉得可以再...', t:1000, time:'15:06' },
+  ]);
+  // THE MOMENT
+  addInfo('⚠️ 突然——你的微信弹出一条消息...');
+  await runScene([
+    { type:'notif', text:'💬 同事小张：「这傻X甲方又改需求，今晚继续磨他」', d:3000, w:2500 },
+    { type:'delay', ms:2000 },
+  ]);
+  addInfo('全场安静了五秒钟。你的投屏上，所有人都看到了那条微信。');
+  const c1 = await showDecision(
+    '社死现场！甲方和全团队都看到了你的吐槽弹窗。你——',
+    '😱 "那...那个是我同事发的！不不不，不是我的微信！"',
+    '😅 "咳...刘总，我们继续看方案吧。（假装什么都没发生）"'
+  );
+  if (c1 === 'left') {
+    addMsg('me','那个...那个是我同事发的！不是我！不对，不是我的微信！那个微信也不是我的！','15:08');
+    await runScene([
+      { type:'stress', d:30, toast:'💀 压力+30（越描越黑）' },
+      { type:'delay', ms:2000 },
+    ]);
+    showEnding('panic', ep3_endings);
+  } else {
+    addMsg('me','...咳，刘总，我们继续看配色方案吧。刚才说到暖色调这个方向。','15:08');
+    await runScene([
+      { type:'stress', d:15, toast:'😅 压力+15（硬着头皮继续）' },
+      { type:'delay', ms:3000 },
+      { type:'them', text:'...行。继续吧。', t:2000, time:'15:11' },
+    ]);
+    showEnding('cool', ep3_endings);
+  }
+}
+
+const ep3_endings = {
+  panic: {
+    emoji:'💀', title:'彻底社死',
+    subtitle:'你慌乱中越描越黑。\n刘总沉默了片刻，说"这个项目先暂停吧"。\n后来听说刘总跟同事说你们公司"不专业"。\n职场第一课：共享屏幕前，关掉所有聊天软件。',
+    stats:{'💀 社死指数':'100%','📉 结局':'项目暂停','📖 经验':'关微信再投屏'}, color:'#FF3B30',
+  },
+  cool: {
+    emoji:'😶‍🌫️', title:'强行化解',
+    subtitle:'你若无其事地继续讲方案。\n刘总看了你一眼，没再提那条微信。\n但散会后你发现，以后每次远程会议，\n甲方都会提前说："请确认屏幕干净"。',
+    stats:{'😶 社死指数':'60%','😅 结局':'勉强过关','📖 经验':'尴尬是暂时的'}, color:'#FFCC00',
+  },
+};
+
+// ── EPISODE 4: 团建惊魂夜 ──
+async function ep_teambuilding_trap() {
+  document.getElementById('npcName').innerHTML = '赵总 <span style="font-size:10px;color:gold;">💎部门总监</span>';
+  document.getElementById('npcAvatar').textContent = '赵';
+  gameActive = true; setStress(10); setTime('19:00');
+  addInfo('🍻 周五 · 晚上 7:00 · 部门团建聚餐');
+
+  await runScene([
+    { type:'delay', ms:500 },
+    { type:'info', text:'酒过三巡，赵总端着酒杯站起来' },
+    { type:'them', text:'今天大家都是一家人。我说句真心话——', t:1000, time:'19:30' },
+    { type:'them', text:'咱们部门，有什么问题都可以说。', t:1000, time:'19:31' },
+    { type:'them', text:'来，大家都说说真心话。我这个人，从来不记仇。', t:1200, time:'19:32' },
+  ]);
+  const c1 = await showDecision(
+    '赵总端着酒杯说"说说真心话，绝对不记仇"。新来的小王正准备开口。全场都在等你表态——',
+    '🤐 "我觉得咱们部门挺好的。"（说他想听的）',
+    '🗣️ "赵总，我提一个小建议——考勤制度能不能灵活一点？"（说真话）'
+  );
+  if (c1 === 'left') {
+    addMsg('me','赵总，我觉得咱们部门氛围挺好的，大家都很拼。','19:33');
+    await runScene([
+      { type:'stress', d:-5, toast:'😐 安全过关' },
+      { type:'them', text:'好！小李有觉悟。来，喝一杯！', t:800, time:'19:34' },
+      { type:'info', text:'新来的小王开口了...' },
+      { type:'them', text:'赵总，我提一个：公司考勤制度太严了，迟到几分钟就扣钱不合理。', t:1500, time:'19:36' },
+    ]);
+    showEnding('survive', ep4_endings);
+  } else {
+    addMsg('me','赵总，我觉得考勤制度可以灵活一点，比如每月给几次免罚迟到机会。','19:33');
+    await runScene([
+      { type:'stress', d:15, toast:'😰 你说了真话' },
+      { type:'delay', ms:2000 },
+      { type:'them', text:'嗯...这个建议我记下了。', t:1500, time:'19:35' },
+      { type:'them', text:'来来来，喝酒喝酒。', t:600, time:'19:36' },
+    ]);
+    addInfo('一个月后，人事调整名单公布。');
+    setTime('9:00');
+    addInfo('⏰ 一个月后...');
+    showEnding('optimized', ep4_endings);
+  }
+}
+
+const ep4_endings = {
+  survive: {
+    emoji:'🎭', title:'安全过关',
+    subtitle:'你说了领导想听的话，安全过关。\n但新来的小王被优化了，理由是"对公司文化认同度不高"。\n你学到了职场铁律：\n团建时的真心话，不是真心，是表演。',
+    stats:{'😐 压力':'30%','🎭 结局':'安全过关','📖 经验':'话术的艺术'}, color:'#8E8E93',
+  },
+  optimized: {
+    emoji:'📦', title:'被优化了',
+    subtitle:'一个月后，你被优化了。\nHR说你"不契合公司价值观"。\n你才想起赵总那句话"我绝对不记仇"。\n记住了：当领导让你说真心话的时候，\n千万说他想听的话。',
+    stats:{'💔 压力':'80%','📦 结局':'被优化','📖 经验':'有些话永远不要说'}, color:'#FF3B30',
+  },
+};
+
+// ── EPISODE 5: 裁员风暴眼 ──
+async function ep_layoff_storm() {
+  document.getElementById('npcName').innerHTML = 'HR李 <span style="font-size:10px;color:#8E8E93;">人力资源</span>';
+  document.getElementById('npcAvatar').textContent = '李';
+  gameActive = true; setStress(15); setTime('10:00');
+  addInfo('📱 周四 · 上午 10:00 · HR约你到会议室');
+
+  await runScene([
+    { type:'delay', ms:500 },
+    { type:'them', text:'小李，坐。', t:600, time:'10:01' },
+    { type:'them', text:'是这样的...公司最近业务调整...你知道的...', t:1200, time:'10:02' },
+    { type:'them', text:'所以...我们决定给你N+3...你接受吗？', t:1500, time:'10:03' },
+  ]);
+  const c1 = await showDecision(
+    'HR比你还紧张，说话都在抖。N+3的赔偿方案摆在面前。你——',
+    '😏 "好，签吧。"（爽快接受）',
+    '😰 "能不能再谈谈？我在公司做了三年了..."'
+  );
+  addMsg('me', c1==='left' ? '好，签吧。' : '能不能再谈谈？我在公司做了三年了...','10:04');
+  if (c1 === 'left') {
+    await runScene([
+      { type:'stress', d:-10, toast:'😌 压力-10（N+3到手）' },
+      { type:'them', text:'你...不想争取一下吗？', t:1000, time:'10:05' },
+    ]);
+    addMsg('me','N+3到手，我一个月的假放到年后再找工作，比我上班还划算。','10:06');
+    await runScene([
+      { type:'them', text:'从来没见过这么爽快的。', t:800, time:'10:07' },
+    ]);
+  } else {
+    await runScene([
+      { type:'stress', d:10, toast:'😰 压力+10' },
+      { type:'them', text:'这是公司的最终方案了。', t:800, time:'10:05' },
+      { type:'them', text:'我理解你的感受。但这是最好的条件了。', t:1000, time:'10:06' },
+      { type:'stress', d:5, toast:'😞 没有余地' },
+    ]);
+  }
+
+  // Scene 2: Job hunting
+  setTime('14:00');
+  addInfo('⏰ 两周后 · 你开始找工作');
+  addInfo('你打开招聘App，发现所有JD都有一个隐形条件...');
+  const c2 = await showDecision(
+    '你今年35岁。每个猎头都说"客户要求30-35岁"。你试着把简历上的年龄删了，面试时被问到年龄——',
+    '😤 "我35岁。年龄跟能力有关系吗？"（正面刚）',
+    '💡 "我有十年经验，可以独当一面。"（强调价值）'
+  );
+  if (c2 === 'left') {
+    addMsg('me','我35岁。您觉得年龄跟能力有关系吗？','14:05');
+    await runScene([{ type:'them', text:'嗯...我们团队比较年轻，可能需要能融入的氛围。', t:1200 }]);
+    showEnding('age_crisis', ep5_endings);
+  } else {
+    addMsg('me','我有十年行业经验，独立带过5个项目，可以直接上手不需要培训。年龄带给我的是效率，不是负担。','14:05');
+    await runScene([
+      { type:'delay', ms:1500 },
+      { type:'them', text:'说得有道理。我们其实想找一个能独立带项目的人。', t:1200 },
+    ]);
+    showEnding('new_start', ep5_endings);
+  }
+}
+
+const ep5_endings = {
+  age_crisis: {
+    emoji:'🧊', title:'35岁的冬天',
+    subtitle:'面试官委婉地拒绝了你。\n但你决定自己干——做独立开发。\n收入比以前少，但不用被人用年龄衡量。\n你给20岁的自己写了封信：\n30岁之前就要考虑35岁的出路。',
+    stats:{'😞 压力峰值':'70%','🔄 结局':'转型独立','📖 经验':'提前规划'}, color:'#FF6B35',
+  },
+  new_start: {
+    emoji:'🌅', title:'N+3后的新开始',
+    subtitle:'你拿到了一个比原来薪资涨了20%的offer。\n面试官说：我们就需要你这样有经验的人。\n事实证明——不是所有公司都只看年龄。\n能力才是硬通货。',
+    stats:{'😌 压力峰值':'25%','🎉 结局':'涨薪跳槽','📖 经验':'N+3+涨薪=赚麻了'}, color:'#34C759',
+  },
+};
+
+// ── EPISODE 6: 砍价的艺术 ──
+async function ep_price_war() {
+  document.getElementById('npcName').innerHTML = '马总 <span style="font-size:10px;color:gold;">💎客户方</span>';
+  document.getElementById('npcAvatar').textContent = '马';
+  gameActive = true; setStress(10); setTime('11:00');
+  addInfo('📱 周二 · 上午 11:00 · 报价沟通');
+
+  await runScene([
+    { type:'delay', ms:500 },
+    { type:'them', text:'小李，报价收到了。', t:800, time:'11:01' },
+    { type:'them', text:'能便宜点吗？', t:600, time:'11:02' },
+  ]);
+  const c1 = await showDecision(
+    '甲方开口砍价。你知道市场价就是你的报价。但甲方永远会说贵——',
+    '😰 "那...我给您打个九折吧。"（直接降价）',
+    '😏 "可以，那我们去掉一些非核心功能，报价降20%。"（以退为进）'
+  );
+  if (c1 === 'left') {
+    addMsg('me','马总，我给您打个九折吧。','11:03');
+    await runScene([
+      { type:'stress', d:10, toast:'😰 压力+10（自己的利润被砍了）' },
+      { type:'them', text:'九折？八折吧。', t:600, time:'11:04' },
+      { type:'them', text:'不行？那我找别家了。', t:800, time:'11:05' },
+    ]);
+    showEnding('undercut', ep6_endings);
+  } else {
+    addMsg('me','马总，可以便宜。如果我们去掉售后支持，报价降20%；去掉质量保障，降30%。或者保持原价，功能和售后全包。您选哪个？','11:03');
+    await runScene([
+      { type:'stress', d:-5, toast:'😏 以退为进' },
+      { type:'them', text:'...功能不能少，售后不能少，质量不能少。', t:1200, time:'11:05' },
+      { type:'them', text:'算了，原价签吧。', t:800, time:'11:06' },
+    ]);
+    addInfo('一周后，马总加价续约了——因为他找了一圈发现同等服务下你的报价是最低的。');
+    showEnding('win', ep6_endings);
+  }
+}
+
+const ep6_endings = {
+  undercut: {
+    emoji:'🤡', title:'利润蒸发',
+    subtitle:'你打了八折，利润空间消失了。\n甲方觉得"果然还有降价空间"，\n下次还会压得更狠。\n乙方生存法则：你越容易降价，甲方越觉得你不值钱。',
+    stats:{'📉 利润':'打八折','😞 结局':'被压价','📖 经验':'不要轻易降价'}, color:'#FF3B30',
+  },
+  win: {
+    emoji:'🦈', title:'谈判赢家',
+    subtitle:'你没降价，甲方反而更信任你了。\n因为他发现：便宜的价格≠专业的服务。\n保护自己的报价，就是保护行业的下限。\n后来他介绍了三个客户给你。',
+    stats:{'📈 利润':'100%','🎉 结局':'原价签约+转介绍','📖 经验':'贵有贵的道理'}, color:'#34C759',
+  },
+};
+
+// ═══════════════════════════════════════
+// EPISODE MAP
+// ═══════════════════════════════════════
+const EP_MAP = {
+  designer_revenge: ep_designer_revenge,
+  just_a_button: ep_just_a_button,
+  screen_share_horror: ep_screen_share_horror,
+  teambuilding_trap: ep_teambuilding_trap,
+  layoff_storm: ep_layoff_storm,
+  price_war: ep_price_war,
+};
+
+// ═══════════════════════════════════════
+// EPISODE SELECT SCREEN
+// ═══════════════════════════════════════
+function showEpisodes() {
+  gameActive = false;
   decisionOverlay.classList.remove('active');
+  endingOverlay.classList.remove('active');
+  callOverlay.classList.remove('active');
+
+  episodeScreen.innerHTML = `
+    <h1>🎮 甲方模拟器 2.0</h1>
+    <div class="subtitle">职场生存图鉴 · 6个真实改编关卡</div>
+    ${EPISODES.map(ep => `
+      <div class="episode-card ${completedEpisodes.has(ep.id)?'completed':''}" onclick="startEpisode('${ep.id}')">
+        <div class="ep-emoji">${ep.emoji}</div>
+        <div class="ep-title">${ep.title}</div>
+        <div class="ep-desc">${ep.desc}</div>
+        <div class="ep-source">${ep.source}</div>
+      </div>
+    `).join('')}
+    <div style="text-align:center;margin-top:16px;">
+      <span style="color:#8E8E93;font-size:12px;">${completedEpisodes.size}/${EPISODES.length} 关已通 · 全部素材来自真实职场故事</span>
+    </div>
+  `;
+  episodeScreen.style.display = 'block';
+  chatArea.innerHTML = '';
+}
+
+function backToEpisodes() {
+  endingOverlay.classList.remove('active');
+  showEpisodes();
+}
+
+async function startEpisode(epId) {
+  episodeScreen.style.display = 'none';
+  chatArea.innerHTML = '';
+  decisionOverlay.classList.remove('active');
+  endingOverlay.classList.remove('active');
   callOverlay.classList.remove('active');
   notifBanner.classList.remove('show');
   gameActive = true;
-  setStress(20);
-  setTime('9:41');
-  currentDecision = null;
-  currentResolve = null;
+  setStress(15);
 
-  addInfoMsg('📱 周一 · 上午 9:41');
-
-  // === SCENE 1 ===
-  await runScene([
-    { type: 'delay', ms: 600 },
-    { type: 'them', text: '小李，周末让你改的方案，改好了吗？', typing: 1000, time: '9:41' },
-    { type: 'them', text: '客户那边催了三次了', typing: 600, time: '9:42' },
-    { type: 'them', text: '今天上午必须发过去。', typing: 800, time: '9:42' },
-  ], {
-    prompt: '面对王总的催促，你怎么回？',
-    left: { label: '😰 马上发（其实周末根本没改完）' },
-    right: { label: '😌 改好了，这就发（昨晚熬夜改完了）' },
-  });
-  if (lastDirection === 'left') {
-    addMessage('me', '好的王总，马上发您！', '9:43');
-    await runScene([
-      { type: 'stress', delta: 15, toast: '😰 压力 +15（你根本没改）' },
-      { type: 'them', text: '快点。', typing: 400, time: '9:43' },
-      { type: 'them', text: '算了，我先看看你现在的版本。你现在发我。', typing: 1200, time: '9:45' },
-      { type: 'me', text: '好的...（慌乱中翻找旧版本）', time: '9:46' },
-      { type: 'them', text: '？？？', typing: 600, time: '9:48' },
-      { type: 'them', text: '这不是上上周的版本吗？你在逗我？', typing: 1000, time: '9:49' },
-      { type: 'stress', delta: 20, toast: '😰 压力 +20（被抓包了）' },
-    ]);
-  } else {
-    addMessage('me', '王总，周末刚好改完了，马上发给您。', '9:43');
-    await runScene([
-      { type: 'stress', delta: -5, toast: '😌 压力 -5（提前准备的感觉真好）' },
-      { type: 'them', text: '好。', typing: 400, time: '9:43' },
-      { type: 'them', text: '嗯...看完了。整体还行，但有几个地方要调。', typing: 1200, time: '9:50' },
-    ]);
-  }
-
-  // === SCENE 2: Phone Call ===
-  setTime('10:32');
-  addInfoMsg('⏰ 上午 10:32');
-
-  await runScene([
-    { type: 'notification', text: '💬 王总：小李你过来一下', duration: 2000, wait: 2000 },
-    { type: 'delay', ms: 600 },
-    { type: 'call', lines: [
-      { text: '小李啊，我刚跟客户通了电话', typing: 800 },
-      { text: '客户想要的是"高端大气上档次，低调奢华有内涵"', typing: 1500 },
-      { text: '你那个太素了', typing: 600 },
-      { text: '另外，logo要大一点，同时也要小一点', typing: 1200 },
-      { text: '颜色嘛...我要五彩斑斓的黑，你懂的', typing: 1000 },
-      { text: '下午三点前给我新方案。好吧？', typing: 1000 },
-    ]},
-  ], {
-    prompt: '王总提出了量子力学级别的需求。你怎么办？',
-    left: { label: '😤 "好的王总"（强忍怒火，先答应）' },
-    right: { label: '🤔 "王总，能具体说说五彩斑斓的黑是什么吗？"' },
-  });
-  if (lastDirection === 'left') {
-    addMessage('me', '好的王总，我马上改。', '10:35');
-    await runScene([
-      { type: 'stress', delta: 10, toast: '😰 压力 +10（五彩斑斓的黑是什么鬼）' },
-      { type: 'them', text: '很好。另外PPT也准备一下，明天汇报用。', typing: 1000, time: '10:36' },
-    ]);
-  } else {
-    addMessage('me', '王总，这个方向很有启发。能发我一个参考图吗？我看看客户喜欢的风格。', '10:35');
-    await runScene([
-      { type: 'stress', delta: -5, toast: '😌 压力 -5（沟通到位）' },
-      { type: 'them', text: '行，我让客户发几张参考过来。你先等着。', typing: 1000, time: '10:37' },
-      { type: 'them', text: '对了，PPT也准备一下，明天汇报用。', typing: 800, time: '10:38' },
-    ]);
-  }
-
-  // === SCENE 3: Afternoon Avalanche ===
-  setTime('14:15');
-  addInfoMsg('⏰ 下午 2:15');
-
-  await runScene([
-    { type: 'notification', text: '💬 同事小张：李哥，王总让你顺便把下个月的策划案也出了', duration: 2500, wait: 2500 },
-    { type: 'delay', ms: 800 },
-    { type: 'them', text: '[转发聊天记录]', typing: 600, time: '14:16' },
-    { type: 'them', text: '客户又加了三个需求，你看一下', typing: 800, time: '14:17' },
-    { type: 'voice', time: '14:18' },
-    { type: 'them', text: '「语音转文字」那个首页的banner啊，我觉得还可以再改改，就是那个感觉不太对，你懂我意思吧，就是那个...那个感觉，你改一下', typing: 1500, time: '14:19' },
-    { type: 'notification', text: '📅 提醒：17:00 部门周会', duration: 2000, wait: 1500 },
-    { type: 'delay', ms: 500 },
-    { type: 'them', text: '对了，方案改好了吗？客户在催了。', typing: 800, time: '14:25' },
-  ], {
-    prompt: '需求像雪崩一样涌来。你的策略是？',
-    left: { label: '😵 全部答应，默默扛下所有' },
-    right: { label: '📋 列个优先级清单发给王总确认' },
-  });
-  if (lastDirection === 'left') {
-    addMessage('me', '好的王总，我都记下了，按顺序处理。', '14:26');
-    await runScene([
-      { type: 'stress', delta: 20, toast: '😰 压力 +20（爆表边缘）' },
-      { type: 'them', text: '行。反正今天都得出。', typing: 600, time: '14:27' },
-    ]);
-  } else {
-    addMessage('me', '王总，我整理了目前的任务清单，您看看优先级：\n\n1️⃣ 方案修改（3点前）\n2️⃣ 明天汇报PPT\n3️⃣ 客户新增的3个需求\n4️⃣ 下月策划案\n\n3、4项可能要明天才能交付。', '14:27');
-    await runScene([
-      { type: 'stress', delta: -10, toast: '😌 压力 -10（条理清晰）' },
-      { type: 'them', text: '嗯...策划案可以后天。其他的今天搞定。', typing: 1000, time: '14:29' },
-    ]);
-  }
-
-  // === SCENE 4: The 5:30 Bomb ===
-  setTime('17:28');
-  addInfoMsg('⏰ 下午 5:28');
-
-  await runScene([
-    { type: 'notification', text: '💬 王总：[文件] 客户新方向.pdf', duration: 2500, wait: 2000 },
-    { type: 'delay', ms: 500 },
-    { type: 'them', text: '小李，客户全盘推翻了', typing: 1000, time: '17:29' },
-    { type: 'them', text: '新方向我发你了', typing: 600, time: '17:29' },
-    { type: 'them', text: '明天早上9点客户来公司现场看', typing: 1000, time: '17:30' },
-    { type: 'them', text: '你今晚辛苦一下，明天早上8点前发我。', typing: 1200, time: '17:31' },
-    { type: 'them', text: '别让我失望。', typing: 800, time: '17:31' },
-  ], {
-    prompt: '17:31，下班前2分钟，一周的工作被全盘推翻。你——',
-    left: { label: '😭 "好的，我今晚通宵。"' },
-    right: { label: '💪 "王总，我需要跟你谈一下。"' },
-  });
-  if (lastDirection === 'left') {
-    // SUBMISSION PATH → leads to quit_epic or compromise
-    addMessage('me', '好的王总，我今晚搞定。', '17:32');
-    await runScene([
-      { type: 'stress', delta: 30, toast: '🤯 压力 +30（极限）' },
-      { type: 'them', text: '很好。明天见。', typing: 500, time: '17:32' },
-      { type: 'delay', ms: 1200 },
-    ]);
-
-    setTime('23:47');
-    addInfoMsg('⏰ 深夜 23:47 · 办公室只剩你一个人');
-
-    await runScene([
-      { type: 'notification', text: '💬 王总：刚想起来，配色换成莫兰迪色系，logo再大20%', duration: 3000, wait: 2500 },
-      { type: 'them', text: '还有，客户说想要那种"呼吸感"，你知道的吧', typing: 1200, time: '23:48' },
-    ], {
-      prompt: '凌晨，你还在办公室，王总又加需求了——',
-      left: { label: '😡 "王总，我不干了！！！"' },
-      right: { label: '🥲 "好的，我再改改。"' },
-    });
-    if (lastDirection === 'left') {
-      addMessage('me', '王总。\n\n我不干了。\n\n五彩斑斓的黑，您自己调吧。\n莫兰迪色系，您自己配吧。\n呼吸感，您自己呼吸吧。\n\n我的辞职信明早发您。\n\n晚安。', '23:50');
-      await runScene([
-        { type: 'delay', ms: 3000 },
-        { type: 'them', text: '......', typing: 2000 },
-        { type: 'them', text: '你什么意思？', typing: 800, time: '23:53' },
-        { type: 'delay', ms: 1500 },
-      ]);
-      showEnding('quit_epic');
-    } else {
-      addMessage('me', '好的王总，我再改改。', '23:49');
-      await runScene([
-        { type: 'delay', ms: 1000 },
-      ]);
-      setTime('8:57');
-      addInfoMsg('⏰ 第二天 早上 8:57');
-      await runScene([
-        { type: 'them', text: '方案我看了。', typing: 600, time: '8:58' },
-        { type: 'them', text: '还行。客户勉强满意。', typing: 800, time: '8:59' },
-        { type: 'them', text: '下周还有个大项目，你继续跟。', typing: 1000, time: '9:00' },
-      ]);
-      showEnding('compromise');
-    }
-
-  } else {
-    // ASSERTIVE PATH → leads to promoted or boss_quit
-    addMessage('me', '王总，我想跟你聊一下。\n\n这一周的需求变化我理了一下：\n周一：方案A\n周三：方案B\n周四17:30：全盘推翻→方案C\n\n我理解客户需求很重要。但如果每次都是最后时刻推翻重来，团队没法保证质量。\n\n我的建议：今晚我先出一个框架和核心页面，明早给客户看方向。细节我们在会议现场调整。', '17:33');
-    await runScene([
-      { type: 'stress', delta: -15, toast: '😤 压力 -15（说出来了！）' },
-      { type: 'delay', ms: 2500 },
-      { type: 'them', text: '...', typing: 1500, time: '17:36' },
-      { type: 'them', text: '你说得对。', typing: 600, time: '17:37' },
-      { type: 'them', text: '最近确实变化太多了。客户那边我去沟通。', typing: 1200, time: '17:38' },
-      { type: 'them', text: '你先出框架，细节明天现场对。', typing: 1000, time: '17:39' },
-      { type: 'them', text: '另外...谢谢。', typing: 800, time: '17:40' },
-    ], {
-      prompt: '王总居然说了"谢谢"...但今晚还是要加班。',
-      left: { label: '🏃 高效出框架，12点前回家' },
-      right: { label: '🔥 趁热打铁，出一个惊艳的框架' },
-    });
-    if (lastDirection === 'left') {
-      addMessage('me', '好的，我先出框架和关键页面，保证方向对。', '17:41');
-      await runScene([
-        { type: 'delay', ms: 1500 },
-      ]);
-      setTime('9:03');
-      addInfoMsg('⏰ 第二天 早上 9:03 · 会议室');
-      await runScene([
-        { type: 'them', text: '小李，昨天那个框架...', typing: 800 },
-        { type: 'them', text: '客户看了，方向完全对。', typing: 600 },
-        { type: 'them', text: '细节调整后直接过了。', typing: 500 },
-        { type: 'them', text: '做得不错。这个季度的绩效我给你A+。', typing: 1000 },
-      ]);
-      showEnding('promoted');
-    } else {
-      addMessage('me', '好的。既然要出框架，我做一个让客户眼前一亮的。', '17:41');
-      await runScene([
-        { type: 'stress', delta: -5, toast: '😤 压力 -5（掌控感）' },
-        { type: 'delay', ms: 1500 },
-      ]);
-      setTime('9:03');
-      addInfoMsg('⏰ 第二天 早上 9:03 · 会议室');
-      await runScene([
-        { type: 'them', text: '小李...', typing: 800 },
-        { type: 'them', text: '客户说这是他们见过最好的方案框架。', typing: 1000 },
-        { type: 'them', text: '他们想指定你为唯一对接人。', typing: 1000 },
-        { type: 'them', text: '以后这个客户，你直接负责。', typing: 800 },
-        { type: 'them', text: '我这边就不插手了。', typing: 600 },
-      ]);
-      showEnding('boss_quit');
-    }
+  const epFn = EP_MAP[epId];
+  if (epFn) {
+    await epFn();
+    completedEpisodes.add(epId);
   }
 }
 
-// ── Start ────────────────────────────────────────
-function restartGame() {
-  runFullGame();
-}
-
-// Initial start
-runFullGame();
+// Start
+showEpisodes();
 </script>
 </body>
 </html>
