@@ -472,470 +472,614 @@ function shareEnding(type, text) {
 
 const EPISODES = [
   {
-    id: 'designer_revenge', emoji: '🎨',
-    title: '设计尸的反击',
-    desc: '甲方说"LOGO放大同时显小"，又说"设计是一坨屎"。当设计师甩出工资条的那一刻，甲方沉默了。',
-    source: '源自：豆瓣/网易 真实职场故事',
+    id: 'designer_long_day', emoji: '🎨',
+    title: '设计尸的漫长一天',
+    desc: '从"LOGO要大同时要小"，到当众被骂"一坨屎"，到甲方报价压到十分之一。从日出到深夜，甲方有一万种方式折磨一个设计师——但不是每一种，你都会忍。',
+    source: '改编自：豆瓣·外包甲方精神折磨 | 网易·设计院工资条事件 | 数英网·乙方谈判实录',
   },
   {
-    id: 'just_a_button', emoji: '💻',
-    title: '"就加一个按钮"',
-    desc: '产品经理说需求很简单——"对标微信就行"。甲方说"就加一个按钮"。当你说"好的"的那一刻，地狱开始了。',
-    source: '源自：知乎/V2EX 程序员血泪控诉',
+    id: 'apocalypse_requirements', emoji: '💻',
+    title: '末日需求',
+    desc: '产品经理说"对标微信80%就行"。甲方说"就加一个按钮"。同事在共享屏幕时弹出"这傻X又改需求"。深夜办公室只剩你一个人时，王总的微信又亮了——"配色换成莫兰迪色系，logo再大20%"。',
+    source: '改编自：知乎·一个按钮的故事 | V2EX·甲方卷王 | 快传号·共享屏幕社死 | 脉脉·996实录',
   },
   {
-    id: 'screen_share_horror', emoji: '📱',
-    title: '共享屏幕社死现场',
-    desc: '你正在投屏给甲方看方案，突然弹出一条微信消息："这傻X又改需求"。全场安静了五秒。',
-    source: '源自：快传号/微博 真实社死名场面',
-  },
-  {
-    id: 'teambuilding_trap', emoji: '🏢',
-    title: '团建惊魂夜',
-    desc: '领导说"随便说说真心话"。新来的小王当真了。一个月后小王被优化，理由是"对公司文化认同度不高"。',
-    source: '源自：脉脉/知乎 职场避坑指南',
-  },
-  {
-    id: 'layoff_storm', emoji: '📦',
-    title: '裁员风暴眼',
-    desc: 'HR说这次是"人员优化"，给你N+3。你接还是不接？35岁被裁后，每一份JD都写着"35岁以下"。',
-    source: '源自：知乎/脉脉 真实裁员经历',
-  },
-  {
-    id: 'price_war', emoji: '💰',
-    title: '砍价的艺术',
-    desc: '甲方说"能不能便宜点"，你说可以。然后你涨了价，甲方反而签了。乙方谈判：贵有贵的道理。',
-    source: '源自：163.com/数英网 乙方谈判实录',
+    id: 'the_last_straw', emoji: '📦',
+    title: '最后一根稻草',
+    desc: '团建时领导让说真心话，小王当真了。年终奖发了三个月实习工资。被PUA三年后体检报告亮红灯。HR说N+3你签不签？35岁打开招聘App，每一行都写着"35岁以下"。',
+    source: '改编自：脉脉·团建真心话 | 知乎·被裁员那天 | 知乎·35岁危机 | 知乎·被PUA三年',
   },
 ];
 
-// ── EPISODE 1: 设计尸的反击 ──
-async function ep_designer_revenge() {
+// ═══════════════════════════════════════
+// EPISODE 1: 设计尸的漫长一天 (5 scenes, 6 endings)
+// ═══════════════════════════════════════
+async function ep_designer_long_day() {
   const NPC = { name: '王总', avatar: '王' };
   document.getElementById('npcName').innerHTML = NPC.name + ' <span style="font-size:10px;color:gold;">💎甲方</span>';
   document.getElementById('npcAvatar').textContent = NPC.avatar;
-  gameActive = true; setStress(15); setTime('9:30');
-  addInfo('📱 周三 · 上午 9:30 · 方案评审会');
 
+  gameActive = true; setStress(10); setTime('9:30');
+  addInfo('📱 周三 · 上午 9:30');
+
+  // === SCENE 1: The Morning Brief ===
   await runScene([
-    { type:'delay', ms:500 },
-    { type:'them', text:'小李，这版方案我看了。', t:800, time:'9:31' },
-    { type:'them', text:'怎么说呢...整体感觉不太对。', t:1000, time:'9:32' },
-    { type:'them', text:'首先，LOGO要大一点，但是同时要显得小一点。你懂我意思吧？', t:1500, time:'9:33' },
+    { type:'delay', ms:600 },
+    { type:'them', text:'小李，这版方案我看了。整体感觉不太对。', t:800, time:'9:31' },
+    { type:'them', text:'首先，LOGO要大一点。', t:500, time:'9:32' },
+    { type:'them', text:'但是同时，要显得小一点。', t:700, time:'9:32' },
+    { type:'them', text:'颜色嘛...我要五彩斑斓的黑，你懂的。', t:1000, time:'9:33' },
+    { type:'them', text:'另外客户说想要那种"呼吸感"。', t:800, time:'9:34' },
+    { type:'them', text:'下午三点前给我新方案。好吧？', t:800, time:'9:35' },
   ]);
   const c1 = await showDecision(
-    '王总说LOGO要"大一点同时小一点"——你从业五年，还没翻译出这是什么意思。',
-    '😰 "好的王总，我调一下"（硬着头皮改）',
-    '🤔 "王总，您是说LOGO要更突出，但不要占太多版面？"'
+    '王总提出了"LOGO大同时小"+"五彩斑斓的黑"+"呼吸感"的组合需求。你怎么接？',
+    '😰 "好的王总，我马上改。"（先答应，再想办法翻译）',
+    '🤔 "王总，我找了几个您说的"呼吸感"风格的参考，您看看哪个方向对？"'
   );
+
   if (c1 === 'left') {
-    addMsg('me','好的王总，我调一下。','9:34');
+    addMsg('me','好的王总，我马上改。','9:36');
     await runScene([
-      { type:'stress', d:10, toast:'😰 压力+10（完全没懂）' },
-      { type:'them', text:'不是...你这调的什么啊？', t:800, time:'9:46' },
-      { type:'them', text:'这个设计就是一坨屎。', t:1000, time:'9:47' },
-      { type:'delay', ms:1500 },
+      { type:'stress', d:10, toast:'😰 压力+10' },
+      { type:'them', text:'快点啊。客户那边催了好几次了。', t:800, time:'9:37' },
+      { type:'them', text:'对了，客户发了一个参考', t:600, time:'9:38' },
+      { type:'them', text:'[转发链接] 客户说参考Apple官网的风格就行，预算控制在8万。', t:1200, time:'9:39' },
     ]);
+    addInfo('你点开链接——那是Apple官网，动效团队至少50人，制作成本300万+。');
   } else {
-    addMsg('me','王总，您的意思是LOGO要更突出品牌，但不需要占据太多视觉空间对吧？我建议缩小LOGO尺寸但用对比色强化。','9:34');
+    addMsg('me','王总，我找了几个您说的"呼吸感"风格的参考图，您看看哪个方向对？\n\nA方向：通透留白\nB方向：渐变层次\nC方向：动态呼吸灯效果','9:36');
     await runScene([
-      { type:'stress', d:-5, toast:'😌 压力-5（精准翻译）' },
-      { type:'them', text:'对对对！就是这个意思！', t:600, time:'9:35' },
-      { type:'them', text:'但是整体感觉还是不对...', t:1000, time:'9:36' },
-      { type:'them', text:'说实话，这个设计就是一坨屎。', t:1200, time:'9:37' },
+      { type:'stress', d:-5, toast:'😌 压力-5（精准引导）' },
+      { type:'them', text:'嗯...C方向不错，就是这种感觉。', t:800, time:'9:38' },
+      { type:'them', text:'行，就按这个方向来。', t:600, time:'9:39' },
     ]);
   }
 
-  // Scene 2
-  addInfo('全场的目光都落在你身上。甲方代表王总当众说你的设计是"一坨屎"。');
-  const c2 = await showDecision(
-    '当甲方用情绪化语言攻击你的作品时——',
-    '😡 "王总，请您注意用词。（强压怒火）"',
-    '😏 "那您觉得哪部分最像屎？我分类处理。"'
-  );
-  if (c2 === 'left') {
-    addMsg('me','王总，请您注意用词。设计可以调整，但请尊重我们的工作。','9:38');
-    await runScene([
-      { type:'stress', d:15, toast:'😰 压力+15' },
-      { type:'them', text:'行行行，我说重了。但你自己看看，这能看吗？', t:1200, time:'9:39' },
-      { type:'them', text:'下午三点前给我新方案。散会。', t:800, time:'9:40' },
-    ]);
-  } else {
-    addMsg('me','王总，您觉得是颜色像，排版像，还是整体感觉像？我想分类处理，有针对性地改。','9:38');
-    await runScene([
-      { type:'stress', d:-10, toast:'😤 压力-10（专业拆解）' },
-      { type:'delay', ms:2000 },
-      { type:'them', text:'...算了，其实也没那么差。把颜色调暖一点就行。', t:1200, time:'9:40' },
-    ]);
-  }
-
-  // Scene 3 - THE REVEAL
-  setTime('14:00');
-  addInfo('⏰ 下午 2:00 · 你收到了一封邮件');
+  // === SCENE 2: Mid-Morning Review ===
+  setTime('11:00');
+  addInfo('⏰ 上午 11:00 · 方案评审会');
   await runScene([
-    { type:'them', text:'小李，你这次的修改还是不行。', t:800, time:'14:01' },
-    { type:'them', text:'你知道XX设计院吗？人家做一个方案才收多少钱？', t:1000, time:'14:02' },
-    { type:'them', text:'我们这个预算给你已经很好了。', t:800, time:'14:03' },
+    { type:'notification', text:'💬 同事小张：王总今天心情不好，小心点', d:2000, w:1500 },
+    { type:'delay', ms:500 },
+    { type:'them', text:'小李，你打开方案我们看一下。', t:800, time:'11:02' },
+    { type:'delay', ms:1500 },
+    { type:'them', text:'.........', t:2000, time:'11:04' },
+    { type:'them', text:'这个设计。', t:600, time:'11:05' },
+    { type:'them', text:'就是一坨屎。', t:1000, time:'11:05' },
   ]);
-  const c3 = await showDecision(
-    '王总开始压价了。他说别家比你便宜多了。你手里刚好有设计院朋友的工资条——月薪2000，并行8个项目。',
-    '😤 "王总，我给您看个东西。"（甩出工资条对比）',
-    '😐 "好的王总，我再改改。"（忍气吞声）'
+  addInfo('会议室安静了。所有人的目光落在你身上。');
+
+  const c2 = await showDecision(
+    '当众被甲方说"你的设计是一坨屎"。你的反应——',
+    '😡 "王总，请您注意用词。"（正面回应）',
+    '😏 "王总，您觉得哪部分最像？颜色还是排版？我分类处理。"（专业拆解）'
   );
+
+  if (c2 === 'left') {
+    addMsg('me','王总，请您注意用词。设计可以调整，但请尊重我们的工作。','11:06');
+    await runScene([
+      { type:'stress', d:20, toast:'😰 压力+20（正面冲突）' },
+      { type:'delay', ms:2000 },
+      { type:'them', text:'..........行，我说重了。', t:1500, time:'11:08' },
+      { type:'them', text:'但你看看这个，能看吗？下午三点重新评审。', t:1000, time:'11:09' },
+      { type:'them', text:'还有，我们这预算已经很高了。你知道XX设计院做一个方案才多少钱吗？', t:1200, time:'11:11' },
+    ]);
+  } else {
+    addMsg('me','王总，我想确认一下——是整体配色的问题，还是排版布局的问题？还是信息呈现的逻辑？您帮我定位一下，我精准修改。','11:06');
+    await runScene([
+      { type:'stress', d:-10, toast:'😤 压力-10（把侮辱拆成需求）' },
+      { type:'delay', ms:2500 },
+      { type:'them', text:'......算了。', t:1200, time:'11:08' },
+      { type:'them', text:'也没那么差。把配色往暖色调调一下，排版紧凑一点。', t:1000, time:'11:09' },
+      { type:'them', text:'不过说真的，你这报价不便宜。XX设计院做一个方案才多少？', t:1200, time:'11:11' },
+    ]);
+  }
+
+  // === SCENE 3: The Price War ===
+  await runScene([
+    { type:'them', text:'我们这预算在你这里也就做一个方案，人家能做三个。', t:1000, time:'11:13' },
+    { type:'them', text:'都是做设计的，能有多大区别？', t:800, time:'11:14' },
+  ]);
+  addInfo('你想起前几天看到的新闻——某设计院设计师月薪2000，并行8个项目。');
+
+  const c3 = await showDecision(
+    '王总说"别人比你便宜多了"。你手里有行业数据——多少设计师被极限压榨。',
+    '📊 "王总，我给您看个东西。"（甩出行业真实数据）',
+    '😐 "那我给您打个折吧。"（忍让降价）'
+  );
+
   if (c3 === 'left') {
-    addMsg('me','王总，这是XX设计院设计师的工资条。\n\n月薪2000，并行8个项目，一人干三个人的活。\n\n您说的"便宜"是建立在对设计师的极限压榨上的。\n\n我的报价不高，是对我团队劳动的基本尊重。','14:05');
+    addMsg('me','王总，这是XX设计院设计师的真实工资条。\n\n月薪到手2000，并行8个项目，一人干三个人的活。\n\n您说的"便宜"，是建立在把人当耗材的基础上的。\n\n我们的报价不高——是对团队劳动的基本尊重。','11:15');
     await runScene([
       { type:'stress', d:-20, toast:'🔥 压力-20（说出来太爽了）' },
-      { type:'delay', ms:3000 },
-      { type:'them', text:'......', t:2000, time:'14:08' },
-      { type:'them', text:'我知道了。', t:1000, time:'14:09' },
-      { type:'them', text:'方案按你的节奏来。预算不变。', t:1200, time:'14:10' },
+      { type:'delay', ms:4000 },
+      { type:'them', text:'........................', t:3000, time:'11:19' },
+      { type:'them', text:'我知道了。', t:1000, time:'11:20' },
+      { type:'them', text:'方案按你的节奏来。预算不变。', t:1200, time:'11:21' },
+      { type:'them', text:'另外...刚才说"一坨屎"是我过分了。跟你道歉。', t:1500, time:'11:22' },
     ]);
-    showEnding('won', ep1_endings);
+    showEnding('won_respect', ep1_endings);
+    return;
   } else {
-    addMsg('me','好的王总，我再改改。','14:05');
+    addMsg('me','王总，我给您打个八折吧。','11:15');
     await runScene([
-      { type:'stress', d:25, toast:'🤯 压力+25（又一次妥协）' },
-      { type:'them', text:'嗯。这次别让我失望。', t:800, time:'14:06' },
-      { type:'delay', ms:1000 },
+      { type:'stress', d:15, toast:'😰 压力+15（利润被砍）' },
+      { type:'them', text:'八折？七折吧。', t:600, time:'11:16' },
+      { type:'them', text:'还有，下午三点评审别迟到。方案要大改。', t:800, time:'11:17' },
     ]);
-    setTime('20:30');
-    addInfo('⏰ 晚上 8:30 · 你还在办公室改方案');
-    showEnding('burnout', ep1_endings);
+  }
+
+  // === SCENE 4: Afternoon Avalanche ===
+  setTime('14:30');
+  addInfo('⏰ 下午 2:30');
+  await runScene([
+    { type:'notification', text:'💬 王总：客户又加了三项需求，你看一下', d:2500, w:2000 },
+    { type:'delay', ms:600 },
+    { type:'them', text:'[转发聊天记录]', t:500, time:'14:31' },
+    { type:'voice', time:'14:33' },
+    { type:'them', text:'「语音转文字」那个首页的视觉方向啊，客户觉得还是第一版的感觉对，就是那种...说不清楚的感觉，你自己品一下，把第一版和第三版融合一下', t:2000, time:'14:34' },
+    { type:'notification', text:'📅 提醒：15:00 方案评审 · 17:00 部门周会', d:2000, w:1500 },
+    { type:'them', text:'怎么样？三点评审能拿出东西吗？', t:800, time:'14:35' },
+  ]);
+
+  const c4 = await showDecision(
+    '需求雪崩。语音里你说的"感觉"模糊到极致。三点就要评审——',
+    '😵 "好的，我尽量。"（扛下所有）',
+    '📋 "王总，三点太紧了。我先出一个核心页面框架，剩下的评审会上对齐方向后再细化。"'
+  );
+
+  if (c4 === 'left') {
+    addMsg('me','好的王总，我尽量。','14:36');
+    await runScene([
+      { type:'stress', d:25, toast:'🤯 压力+25' },
+      { type:'them', text:'很好。别让我失望。', t:600, time:'14:37' },
+    ]);
+    setTime('23:30');
+    addInfo('⏰ 深夜 23:30 · 办公室只剩你');
+    await runScene([
+      { type:'notification', text:'💬 王总：配色换成莫兰迪色系。logo再大20%。早点休息。', d:3000, w:2000 },
+    ]);
+    showEnding('burnout_night', ep1_endings);
+  } else {
+    addMsg('me','王总，三点评审我出一个核心页面框架，展示设计方向和视觉语言。具体页面延展在评审会上对齐方向后再推进。这样质量有保证，效率也高。','14:36');
+    await runScene([
+      { type:'stress', d:-10, toast:'😌 压力-10' },
+      { type:'delay', ms:2000 },
+      { type:'them', text:'...可以。有框架就行。', t:1000, time:'14:38' },
+    ]);
+    setTime('18:30');
+    addInfo('⏰ 傍晚 6:30 · 评审结束');
+    await runScene([
+      { type:'them', text:'小李，客户对框架很满意。方向对了。', t:800, time:'18:31' },
+      { type:'them', text:'而且客户说，你上次发给他们的参考图分析很专业。', t:1000, time:'18:32' },
+      { type:'them', text:'以后这个客户你直接对接。我这边不插手了。', t:1000, time:'18:33' },
+    ]);
+    showEnding('promoted', ep1_endings);
   }
 }
 
 const ep1_endings = {
-  won: {
-    emoji:'🦁', title:'甲方闭嘴了',
-    subtitle:'你甩出工资条的数据让王总沉默了。\n他第一次意识到，压价挤压的不是乙方的利润，\n而是一个个活人的生存空间。\n方案按你的节奏推进，这个客户续约三年。',
-    stats:{'😤 压力峰值':'35%','🎯 结局':'赢得尊重','📖 经验':'用数据说话'}, color:'#34C759', share:'我在《甲方模拟器》里用工资条让甲方闭嘴了 🦁 你敢来试试吗？',
+  won_respect: {
+    emoji:'🦁', title:'甲方道歉了',
+    subtitle:'你甩出行业真实数据后，王总沉默了。\n他第一次意识到：压价挤压的不是乙方的利润，\n而是一个个活人的生存底线。\n\n他道歉了。这个客户后来续约了三年。\n不是因为你便宜——是因为你专业且有底线。',
+    stats:{'😤 压力峰值':'35%','🎯 结局':'赢得尊重','📖 经验':'行业的数据，是最好的谈判武器'},
+    color:'#34C759',
+    share:'我在《甲方模拟器》里用真实数据让甲方道歉了 🦁 你敢不敢来测试你的职场生存力？',
   },
-  burnout: {
-    emoji:'🕯️', title:'又一个妥协的夜晚',
-    subtitle:'你又一次改到了深夜。\n甲方满意了，打折续约了。\n但你知道，这种压价模式永远不会改变。\n除非有人站出来说"不"。',
-    stats:{'🤯 压力峰值':'85%','😮‍💨 结局':'熬过今晚','📖 经验':'忍，也是一种生存'}, color:'#8E8E93',
+  promoted: {
+    emoji:'🏆', title:'你接替了甲方',
+    subtitle:'客户指定你为唯一对接人。\n王总退出了这个项目。\n\n三个月后，你成了项目负责人。\n不是因为你会忍耐——\n是因为你在混乱中提供了唯一清晰的方向。',
+    stats:{'😌 压力峰值':'40%','👑 结局':'升职','📖 经验':'专业框架 > 盲目加班'},
+    color:'#FFD700',
+    share:'🏆 我在《甲方模拟器》里把甲方熬走了！你行吗？',
+  },
+  burnout_night: {
+    emoji:'🕯️', title:'又一个通宵',
+    subtitle:'配色换成了莫兰迪色系。logo放大了20%。\n客户勉强满意。但你知道下周还会重来一遍。\n\n你透过办公室的窗户看到天亮了。\n至少...这个月工资保住了。\n但这是你第几次看到天亮了？',
+    stats:{'🤯 压力峰值':'95%','😮‍💨 结局':'熬过今晚','📖 经验':'生存也是胜利——但有更好的方式'},
+    color:'#8E8E93',
+    share:'🕯️ 在《甲方模拟器》里通宵了...看看你比我活得好吗？',
   },
 };
 
-// ── EPISODE 2: 就加一个按钮 ──
-async function ep_just_a_button() {
+// ═══════════════════════════════════════
+// EPISODE 2: 末日需求 (5 scenes, 6 endings)
+// ═══════════════════════════════════════
+async function ep_apocalypse_requirements() {
   document.getElementById('npcName').innerHTML = '张总 <span style="font-size:10px;color:gold;">💎产品总监</span>';
   document.getElementById('npcAvatar').textContent = '张';
-  gameActive = true; setStress(10); setTime('10:00');
-  addInfo('📱 周一 · 上午 10:00 · 需求评审会');
 
+  gameActive = true; setStress(10); setTime('10:00');
+  addInfo('📱 周一 · 上午 10:00 · 迭代规划会');
+
+  // === SCENE 1: "Simple" Requirement ===
   await runScene([
-    { type:'delay', ms:500 },
-    { type:'them', text:'这周的需求很简单。', t:800, time:'10:01' },
-    { type:'them', text:'就加一个小功能——一个按钮而已，应该很快吧？', t:1200, time:'10:02' },
+    { type:'delay', ms:600 },
+    { type:'them', text:'这周的需求我替大家看过了，很简单。', t:1000, time:'10:01' },
+    { type:'them', text:'就加一个小功能——一个按钮而已。', t:800, time:'10:02' },
+    { type:'them', text:'对标微信就行，不用完全一样，80%就好。', t:1000, time:'10:03' },
   ]);
-  addInfo('你打开需求文档，这个"一个按钮"需要：\n① 计算历史所有订单的加权平均评分\n② 根据用户浏览记录推荐相似商品\n③ 支持批量导出Excel并自动生成图表');
+  addInfo('你打开需求文档：\n① 即时通讯：消息推送、离线消息、群聊、已读未读\n② 语音+视频通话\n③ 文件传输（支持断点续传）\n④ 表情包系统\n⑤ 朋友圈功能\n"就加一个按钮"');
   const c1 = await showDecision(
-    '一个按钮 = 三个独立模块，每个需要两周。产品经理说："你把三个功能放一个按钮里不就行了？"',
-    '😰 "好的张总，我评估一下工作量。"',
-    '🤨 "张总，这三个功能每个都是独立模块，我需要跟你对齐一下优先级。"'
+    '"对标微信80%"+"就加一个按钮"= 五个独立模块。你怎么说？',
+    '😰 "好的张总，我排一下工期。"（默默扛下）',
+    '🔍 "张总，我拆解一下——这五个模块每个都是独立系统，我帮你排优先级。"'
   );
+
   if (c1 === 'left') {
-    addMsg('me','好的张总，我评估一下。','10:05');
+    addMsg('me','好的张总，我排一下工期。','10:05');
     await runScene([
-      { type:'stress', d:15, toast:'😰 压力+15（又要加班了）' },
-      { type:'them', text:'很好。另外这个功能对标微信就行，不用完全一样，80%就好。', t:1500, time:'10:07' },
-      { type:'them', text:'对了，还要支持语音消息、视频通话、文件传输，就这些基础功能。', t:1500, time:'10:09' },
-      { type:'them', text:'下周一上线。散会。', t:800, time:'10:10' },
+      { type:'stress', d:15, toast:'😰 压力+15' },
+      { type:'them', text:'很好。我就说嘛，没什么难的。', t:800, time:'10:06' },
+      { type:'them', text:'周五上线。散会。', t:600, time:'10:07' },
     ]);
+    addInfo('当天下午，三个同事开始更新简历。');
   } else {
-    addMsg('me','张总，我拆解一下：\n\n① 评分计算：涉及历史数据清洗，约2周\n② 推荐引擎：需要接入算法，约2周\n③ Excel导出：需要模版引擎，约1周\n\n三项共5周工作量。我建议先做③导出，这是客户最急的。①和②排下个迭代。','10:06');
+    addMsg('me','张总，我拆一下：\n\n① 即时通讯：消息通道+状态同步，约3周\n② 音视频：WebRTC集成+转码，约3周\n③ 文件传输：分片上传+断点续传，约2周\n④ 表情包：资源管理+渲染，约1周\n⑤ 朋友圈：信息流+权限，约2周\n\n五模块共11周。我们周五之前先出哪个？','10:06');
     await runScene([
-      { type:'stress', d:-10, toast:'😌 压力-10（专业拆解）' },
-      { type:'delay', ms:2000 },
-      { type:'them', text:'嗯...这么一说确实不是"一个按钮"。', t:1200, time:'10:08' },
-      { type:'them', text:'先做导出吧。其他的我跟客户再沟通。', t:1000, time:'10:09' },
+      { type:'stress', d:-10, toast:'😌 压力-10（数据说话）' },
+      { type:'delay', ms:3000 },
+      { type:'them', text:'...11周？', t:1000, time:'10:09' },
+      { type:'them', text:'那先做即时通讯吧。剩下的我跟客户沟通。', t:1200, time:'10:10' },
     ]);
   }
 
-  // Scene 2: the avalanche
+  // === SCENE 2: Screen Share Disaster ===
   setTime('14:00');
-  addInfo('⏰ 下午 2:00');
+  addInfo('⏰ 下午 2:00 · 远程客户演示');
   await runScene([
-    { type:'notif', text:'💬 张总：客户又加了三个需求，你看一下', d:2000, w:1800 },
-    { type:'them', text:'对了，那个按钮做好了吗？客户在催。', t:800, time:'14:05' },
-    { type:'notif', text:'📅 提醒：本周五deadline', d:2000, w:1500 },
+    { type:'them', text:'小李，共享一下屏幕，过一下原型。', t:800, time:'14:01' },
   ]);
+  addMsg('me','好的，我共享屏幕。','14:02');
+  await runScene([
+    { type:'them', text:'嗯，这个交互...', t:800, time:'14:05' },
+    { type:'notification', text:'💬 同事阿强：「这傻X又改需求，今晚继续磨他」', d:3000, w:2500 },
+    { type:'delay', ms:3000 },
+  ]);
+  addInfo('⚠️ 全场安静了五秒。所有人都看到了那条微信弹窗。');
+
   const c2 = await showDecision(
-    '需求像雪崩一样涌来。PM说了"对标微信80%"，又加了三个需求。你的策略是——',
-    '😵 全部答应，自己扛',
-    '📋 列优先级清单，让PM确认'
+    '你的微信弹窗出现在共享屏幕上——"这傻X又改需求"。甲方、PM、全团队都看到了。',
+    '😱 "那个不是我发的！是我同事！不对...不是我微信！"（慌乱解释）',
+    '😶 "咳...我们继续看原型吧。第三个功能是实时通知...（面无表情继续讲）"'
   );
+
   if (c2 === 'left') {
-    addMsg('me','好的，我都记下了。','14:06');
+    addMsg('me','那个不是我发的！不对！不是我微信！不是我的！','14:08');
     await runScene([
-      { type:'stress', d:25, toast:'🤯 压力+25' },
+      { type:'stress', d:25, toast:'💀 压力+25（社死现场）' },
+      { type:'delay', ms:3000 },
+      { type:'them', text:'......这个项目先暂停吧。李总您那边有新供应商推荐吗？', t:2000, time:'14:11' },
     ]);
-    setTime('23:30');
-    addInfo('⏰ 深夜 23:30 · 全公司只剩你');
-    showEnding('996', ep2_endings);
+    showEnding('shesi', ep2_endings);
+    return;
   } else {
-    addMsg('me','张总，我更新了优先级清单：\n\n🔴 P0: Excel导出（客户deadline）\n🟡 P1: 评分计算\n🟢 P2: 推荐引擎\n⚪ P3: 客户新增需求\n\nP3排下个迭代可以吗？','14:07');
+    addMsg('me','...我们继续看原型。第三个功能是实时通知的推送策略。','14:08');
     await runScene([
-      { type:'stress', d:-10, toast:'😌 压力-10' },
-      { type:'them', text:'行。P3我跟客户说一下。', t:800, time:'14:09' },
+      { type:'stress', d:10, toast:'😅 压力+10（强行淡定）' },
+      { type:'delay', ms:3000 },
+      { type:'them', text:'......行。继续吧。', t:2000, time:'14:11' },
     ]);
-    setTime('18:30');
-    addInfo('⏰ 傍晚 6:30 · 今天准时下班');
-    showEnding('balance', ep2_endings);
+    addInfo('散会后，同事阿强给你发了一条消息——');
+    addMsg('them','李哥对不起对不起对不起！我忘了你在投屏！！！','14:35');
+  }
+
+  // === SCENE 3: Escalation ===
+  setTime('17:00');
+  addInfo('⏰ 下午 5:00 · 需求变更通知');
+  await runScene([
+    { type:'notification', text:'💬 张总：客户那边有新想法，下班前碰一下', d:2500, w:2000 },
+    { type:'delay', ms:600 },
+    { type:'them', text:'小李，客户全盘推翻了。', t:1000, time:'17:02' },
+    { type:'them', text:'新方向我发你了。明天早上9点客户来公司现场看。', t:1200, time:'17:03' },
+    { type:'them', text:'今晚辛苦一下，明天早上8点前发我。', t:1000, time:'17:04' },
+    { type:'them', text:'对了，刚想起来，配色换成莫兰迪色系，logo再大20%。', t:1000, time:'17:05' },
+    { type:'them', text:'哦还有，客户说想要那种"呼吸感"，你知道的吧。', t:1000, time:'17:06' },
+  ]);
+
+  const c3 = await showDecision(
+    '17:06。一周的工作被全盘推翻。配色要换、logo要大、呼吸感、明天8点交——',
+    '😭 "好的张总，我今晚搞定。"（通宵硬扛）',
+    '💪 "张总，我需要跟你谈一下。这不是加班能解决的问题。"'
+  );
+
+  if (c3 === 'left') {
+    addMsg('me','好的张总，我今晚搞定。','17:07');
+    await runScene([
+      { type:'stress', d:30, toast:'🤯 压力+30' },
+      { type:'them', text:'很好。明天见。', t:500, time:'17:07' },
+    ]);
+    // Night scene
+    setTime('23:47');
+    addInfo('⏰ 深夜 23:47 · 整层楼只剩你一个人');
+    await runScene([
+      { type:'notification', text:'💬 张总：刚想起来，客户还想要一个视频会议功能。简单做一下就行', d:3500, w:2500 },
+      { type:'them', text:'还有，首页的动画效果要加一下，参考Apple官网的那种感觉。', t:1200, time:'23:49' },
+    ]);
+    const c4 = await showDecision(
+      '凌晨12点，张总还在加需求。视频会议+"Apple官网那种感觉"。你——',
+      '😡 "张总，我不干了。您自己写吧。"',
+      '🥲 "好的张总，我再改改。"'
+    );
+    if (c4 === 'left') {
+      addMsg('me','张总。\n\n不干了。\n\n五彩斑斓的黑您自己调。莫兰迪色系您自己配。\n呼吸感您自己呼吸。微信对标您自己对标。\n\n辞职信明早发您。晚安。','23:51');
+      await runScene([
+        { type:'delay', ms:3000 },
+        { type:'them', text:'？？？你什么意思？', t:1000, time:'23:54' },
+      ]);
+      showEnding('quit_epic', ep2_endings);
+    } else {
+      addMsg('me','好的，我再改改。','23:50');
+      setTime('8:57');
+      addInfo('⏰ 第二天 早上 8:57');
+      await runScene([
+        { type:'them', text:'方案我看了。还行。', t:800, time:'8:58' },
+        { type:'them', text:'不过有几个地方要调——下午继续。', t:1000, time:'8:59' },
+      ]);
+      showEnding('hamster_wheel', ep2_endings);
+    }
+  } else {
+    addMsg('me','张总，我想认真聊一下。\n\n这周的需求变化：\n周一：方案A\n周三：方案B\n周四17:00：全盘推翻→方案C\n\n每次都最后时刻推翻重来，不是加班能弥补的——这影响的是团队士气和产品质量。\n\n我的建议：今晚我先出核心框架+关键页面，明早给客户看方向。细节现场调整。\n\n另外——建议我们把需求变更流程规范化。每次推翻应该有正式的评审节点，而不是一条微信。','17:08');
+    await runScene([
+      { type:'stress', d:-15, toast:'😤 压力-15（说出来了）' },
+      { type:'delay', ms:4000 },
+      { type:'them', text:'.........', t:3000, time:'17:12' },
+      { type:'them', text:'你说得对。', t:600, time:'17:13' },
+      { type:'them', text:'最近变动确实太多了。客户那边我去谈。流程的事我也想想。', t:1500, time:'17:15' },
+      { type:'them', text:'你先出框架。细节明天对。', t:800, time:'17:16' },
+    ]);
+    setTime('9:05');
+    addInfo('⏰ 第二天 早上 9:05 · 客户会议室');
+    await runScene([
+      { type:'them', text:'小李，客户说这个框架是他们见过最清晰的。', t:1000, time:'9:06' },
+      { type:'them', text:'他们想让你做这个项目的技术负责人。', t:1000, time:'9:07' },
+    ]);
+    showEnding('architect', ep2_endings);
   }
 }
 
 const ep2_endings = {
-  '996': {
-    emoji:'🧟', title:'又一个996之夜',
-    subtitle:'你凌晨两点还在改"那个按钮"。\nPM说的"对标微信80%"，\n你可以用一生去追赶。\n周五deadline...应该能赶上吧？',
-    stats:{'🤯 压力峰值':'95%','😮‍💨 结局':'通宵加班','📖 经验':'学会说不'}, color:'#FF3B30',
-  },
-  balance: {
-    emoji:'🧘', title:'准时下班',
-    subtitle:'你把优先级清单发给PM后，\n他帮你挡掉了不合理的需求。\n今天准时六点半下班，\n同事惊讶地看着你收拾东西走出公司。',
-    stats:{'😌 压力峰值':'30%','🎉 结局':'准时下班','📖 经验':'对齐预期比埋头苦干重要'}, color:'#34C759',
-  },
-};
-
-// ── EPISODE 3: 共享屏幕社死 ──
-async function ep_screen_share_horror() {
-  document.getElementById('npcName').innerHTML = '刘总 <span style="font-size:10px;color:gold;">💎客户方</span>';
-  document.getElementById('npcAvatar').textContent = '刘';
-  gameActive = true; setStress(10); setTime('15:00');
-  addInfo('📱 周三 · 下午 3:00 · 远程方案演示');
-
-  await runScene([
-    { type:'delay', ms:500 },
-    { type:'them', text:'小李，你那边共享一下屏幕，我们过一下方案。', t:800, time:'15:01' },
-  ]);
-  addMsg('me','好的刘总，我共享屏幕。','15:02');
-  await runScene([
-    { type:'them', text:'嗯，整体方向还行...', t:800, time:'15:05' },
-    { type:'them', text:'等一下，这个配色我觉得可以再...', t:1000, time:'15:06' },
-  ]);
-  // THE MOMENT
-  addInfo('⚠️ 突然——你的微信弹出一条消息...');
-  await runScene([
-    { type:'notif', text:'💬 同事小张：「这傻X甲方又改需求，今晚继续磨他」', d:3000, w:2500 },
-    { type:'delay', ms:2000 },
-  ]);
-  addInfo('全场安静了五秒钟。你的投屏上，所有人都看到了那条微信。');
-  const c1 = await showDecision(
-    '社死现场！甲方和全团队都看到了你的吐槽弹窗。你——',
-    '😱 "那...那个是我同事发的！不不不，不是我的微信！"',
-    '😅 "咳...刘总，我们继续看方案吧。（假装什么都没发生）"'
-  );
-  if (c1 === 'left') {
-    addMsg('me','那个...那个是我同事发的！不是我！不对，不是我的微信！那个微信也不是我的！','15:08');
-    await runScene([
-      { type:'stress', d:30, toast:'💀 压力+30（越描越黑）' },
-      { type:'delay', ms:2000 },
-    ]);
-    showEnding('panic', ep3_endings);
-  } else {
-    addMsg('me','...咳，刘总，我们继续看配色方案吧。刚才说到暖色调这个方向。','15:08');
-    await runScene([
-      { type:'stress', d:15, toast:'😅 压力+15（硬着头皮继续）' },
-      { type:'delay', ms:3000 },
-      { type:'them', text:'...行。继续吧。', t:2000, time:'15:11' },
-    ]);
-    showEnding('cool', ep3_endings);
-  }
-}
-
-const ep3_endings = {
-  panic: {
+  shesi: {
     emoji:'💀', title:'彻底社死',
-    subtitle:'你慌乱中越描越黑。\n刘总沉默了片刻，说"这个项目先暂停吧"。\n后来听说刘总跟同事说你们公司"不专业"。\n职场第一课：共享屏幕前，关掉所有聊天软件。',
-    stats:{'💀 社死指数':'100%','📉 结局':'项目暂停','📖 经验':'关微信再投屏'}, color:'#FF3B30',
+    subtitle:'甲方沉默片刻说"这个项目先暂停"。\n后来听说客户跟CEO说你们"不专业"。\n\n职场第一课：共享屏幕之前，\n关掉微信。关掉微信。关掉微信。',
+    stats:{'💀 社死指数':'100%','📉 结局':'项目暂停','📖 经验':'投屏前关微信'},
+    color:'#FF3B30',
+    share:'💀 在《甲方模拟器》里共享屏幕社死了...你敢试试吗？',
   },
-  cool: {
-    emoji:'😶‍🌫️', title:'强行化解',
-    subtitle:'你若无其事地继续讲方案。\n刘总看了你一眼，没再提那条微信。\n但散会后你发现，以后每次远程会议，\n甲方都会提前说："请确认屏幕干净"。',
-    stats:{'😶 社死指数':'60%','😅 结局':'勉强过关','📖 经验':'尴尬是暂时的'}, color:'#FFCC00',
+  quit_epic: {
+    emoji:'🔥', title:'你炒了甲方',
+    subtitle:'凌晨12点，你发了那条消息。\n"五彩斑斓的黑您自己调。呼吸感您自己呼吸。"\n\n一周后，你开了自己的工作室。\n第一个月收入只有原来的一半，\n但再也没有人在凌晨给你发"就加一个按钮"。',
+    stats:{'😡 压力峰值':'100%','🔥 结局':'辞职创业','📖 经验':'不是所有甲方都值得伺候'},
+    color:'#FF6B35',
+    share:'🔥 我在《甲方模拟器》里炒了甲方！看看你怎么死？',
+  },
+  hamster_wheel: {
+    emoji:'🐹', title:'仓鼠之轮',
+    subtitle:'方案过了。但你很清楚——\n下周还会重来一遍。下下周也是。\n\n你开始怀疑：这不是一份工作，\n这是一个永远不会停的跑步轮。\n而你是一只仓鼠。',
+    stats:{'😐 压力':'75%','🐹 结局':'继续跑轮','📖 经验':'有些循环，需要外力打破'},
+    color:'#8E8E93',
+  },
+  architect: {
+    emoji:'🏗️', title:'你成了架构师',
+    subtitle:'客户点名要你做技术负责人。\n你提的流程规范被采纳，不再有"一条微信推翻一周工作"。\n\n三个月后，团队从4人扩到12人。\n张总说：你比我更适合带这个团队。',
+    stats:{'😎 压力':'25%','👑 结局':'技术负责人','📖 经验':'混乱是阶梯，踩上去就是升职'},
+    color:'#34C759',
+    share:'🏗️ 我在《甲方模拟器》里把甲方变成了我的客户！',
   },
 };
 
-// ── EPISODE 4: 团建惊魂夜 ──
-async function ep_teambuilding_trap() {
+// ═══════════════════════════════════════
+// EPISODE 3: 最后一根稻草 (5 scenes, 6 endings)
+// ═══════════════════════════════════════
+async function ep_the_last_straw() {
   document.getElementById('npcName').innerHTML = '赵总 <span style="font-size:10px;color:gold;">💎部门总监</span>';
   document.getElementById('npcAvatar').textContent = '赵';
-  gameActive = true; setStress(10); setTime('19:00');
+
+  gameActive = true; setStress(20); setTime('19:00');
   addInfo('🍻 周五 · 晚上 7:00 · 部门团建聚餐');
 
+  // === SCENE 1: Teambuilding Trap ===
   await runScene([
-    { type:'delay', ms:500 },
-    { type:'info', text:'酒过三巡，赵总端着酒杯站起来' },
+    { type:'delay', ms:600 },
+    { type:'info', text:'酒过三巡，气氛热烈。赵总端着酒杯站起来。' },
     { type:'them', text:'今天大家都是一家人。我说句真心话——', t:1000, time:'19:30' },
-    { type:'them', text:'咱们部门，有什么问题都可以说。', t:1000, time:'19:31' },
+    { type:'them', text:'咱们部门有啥问题，都可以说，畅所欲言。', t:1000, time:'19:31' },
     { type:'them', text:'来，大家都说说真心话。我这个人，从来不记仇。', t:1200, time:'19:32' },
   ]);
+
   const c1 = await showDecision(
-    '赵总端着酒杯说"说说真心话，绝对不记仇"。新来的小王正准备开口。全场都在等你表态——',
+    '赵总让你"说真心话"。新来的小王正准备开口。你——',
     '🤐 "我觉得咱们部门挺好的。"（说他想听的）',
-    '🗣️ "赵总，我提一个小建议——考勤制度能不能灵活一点？"（说真话）'
+    '🗣️ "赵总，关于考勤制度，我提一个小建议。"'
   );
+
   if (c1 === 'left') {
     addMsg('me','赵总，我觉得咱们部门氛围挺好的，大家都很拼。','19:33');
     await runScene([
-      { type:'stress', d:-5, toast:'😐 安全过关' },
+      { type:'stress', d:-5, toast:'😐 安全' },
       { type:'them', text:'好！小李有觉悟。来，喝一杯！', t:800, time:'19:34' },
       { type:'info', text:'新来的小王开口了...' },
-      { type:'them', text:'赵总，我提一个：公司考勤制度太严了，迟到几分钟就扣钱不合理。', t:1500, time:'19:36' },
+      { type:'them', text:'赵总，我提一个：考勤太严了，迟到几分钟就扣钱不合理。', t:1500, time:'19:36' },
+      { type:'them', text:'嗯...这个建议我记下了。', t:1000, time:'19:37' },
     ]);
-    showEnding('survive', ep4_endings);
+    addInfo('一个月后。');
+    setTime('9:00');
+    addInfo('⏰ 一个月后...');
+    await runScene([
+      { type:'info', text:'小王因为"对公司文化认同度不高"被优化了。' },
+    ]);
+    addInfo('你安全了——但心里有一种说不出的滋味。');
   } else {
-    addMsg('me','赵总，我觉得考勤制度可以灵活一点，比如每月给几次免罚迟到机会。','19:33');
+    addMsg('me','赵总，我提一个小建议——考勤制度能不能灵活一点？比如每月给几次免罚迟到机会，毕竟大家加班的时候也没算考勤。','19:33');
     await runScene([
       { type:'stress', d:15, toast:'😰 你说了真话' },
       { type:'delay', ms:2000 },
       { type:'them', text:'嗯...这个建议我记下了。', t:1500, time:'19:35' },
-      { type:'them', text:'来来来，喝酒喝酒。', t:600, time:'19:36' },
+      { type:'them', text:'来来来，喝酒。', t:600, time:'19:36' },
     ]);
-    addInfo('一个月后，人事调整名单公布。');
-    setTime('9:00');
-    addInfo('⏰ 一个月后...');
-    showEnding('optimized', ep4_endings);
+    addInfo('一个月后，HR约你谈话。');
   }
-}
 
-const ep4_endings = {
-  survive: {
-    emoji:'🎭', title:'安全过关',
-    subtitle:'你说了领导想听的话，安全过关。\n但新来的小王被优化了，理由是"对公司文化认同度不高"。\n你学到了职场铁律：\n团建时的真心话，不是真心，是表演。',
-    stats:{'😐 压力':'30%','🎭 结局':'安全过关','📖 经验':'话术的艺术'}, color:'#8E8E93',
-  },
-  optimized: {
-    emoji:'📦', title:'被优化了',
-    subtitle:'一个月后，你被优化了。\nHR说你"不契合公司价值观"。\n你才想起赵总那句话"我绝对不记仇"。\n记住了：当领导让你说真心话的时候，\n千万说他想听的话。',
-    stats:{'💔 压力':'80%','📦 结局':'被优化','📖 经验':'有些话永远不要说'}, color:'#FF3B30',
-  },
-};
-
-// ── EPISODE 5: 裁员风暴眼 ──
-async function ep_layoff_storm() {
-  document.getElementById('npcName').innerHTML = 'HR李 <span style="font-size:10px;color:#8E8E93;">人力资源</span>';
-  document.getElementById('npcAvatar').textContent = '李';
-  gameActive = true; setStress(15); setTime('10:00');
-  addInfo('📱 周四 · 上午 10:00 · HR约你到会议室');
-
+  // === SCENE 2: Performance Review ===
+  setTime('10:00');
+  addInfo('⏰ 一个月后 · 绩效面谈');
   await runScene([
-    { type:'delay', ms:500 },
-    { type:'them', text:'小李，坐。', t:600, time:'10:01' },
-    { type:'them', text:'是这样的...公司最近业务调整...你知道的...', t:1200, time:'10:02' },
-    { type:'them', text:'所以...我们决定给你N+3...你接受吗？', t:1500, time:'10:03' },
+    { type:'them', text:'小李，你在公司三年了。', t:800, time:'10:01' },
+    { type:'them', text:'你的能力嘛...说实话，还不够独立负责项目。', t:1000, time:'10:02' },
+    { type:'them', text:'虽然你已经独立带了一年项目，但我觉得还需要磨练。', t:1200, time:'10:03' },
+    { type:'them', text:'所以这次涨薪...先缓缓。新人期不要在意钱，多提升自己。', t:1200, time:'10:04' },
   ]);
-  const c1 = await showDecision(
-    'HR比你还紧张，说话都在抖。N+3的赔偿方案摆在面前。你——',
-    '😏 "好，签吧。"（爽快接受）',
-    '😰 "能不能再谈谈？我在公司做了三年了..."'
-  );
-  addMsg('me', c1==='left' ? '好，签吧。' : '能不能再谈谈？我在公司做了三年了...','10:04');
-  if (c1 === 'left') {
-    await runScene([
-      { type:'stress', d:-10, toast:'😌 压力-10（N+3到手）' },
-      { type:'them', text:'你...不想争取一下吗？', t:1000, time:'10:05' },
-    ]);
-    addMsg('me','N+3到手，我一个月的假放到年后再找工作，比我上班还划算。','10:06');
-    await runScene([
-      { type:'them', text:'从来没见过这么爽快的。', t:800, time:'10:07' },
-    ]);
-  } else {
-    await runScene([
-      { type:'stress', d:10, toast:'😰 压力+10' },
-      { type:'them', text:'这是公司的最终方案了。', t:800, time:'10:05' },
-      { type:'them', text:'我理解你的感受。但这是最好的条件了。', t:1000, time:'10:06' },
-      { type:'stress', d:5, toast:'😞 没有余地' },
-    ]);
-  }
-
-  // Scene 2: Job hunting
-  setTime('14:00');
-  addInfo('⏰ 两周后 · 你开始找工作');
-  addInfo('你打开招聘App，发现所有JD都有一个隐形条件...');
   const c2 = await showDecision(
-    '你今年35岁。每个猎头都说"客户要求30-35岁"。你试着把简历上的年龄删了，面试时被问到年龄——',
-    '😤 "我35岁。年龄跟能力有关系吗？"（正面刚）',
-    '💡 "我有十年经验，可以独当一面。"（强调价值）'
+    '带了三年项目，领导说"你能力还不够独立"。PUA的第三年——',
+    '😞 "好的赵总，我继续努力。"（忍了）',
+    '😤 "赵总，我带了一年项目，客户满意度全组最高。我想了解一下，还需要提升什么具体能力？"'
   );
+
   if (c2 === 'left') {
-    addMsg('me','我35岁。您觉得年龄跟能力有关系吗？','14:05');
-    await runScene([{ type:'them', text:'嗯...我们团队比较年轻，可能需要能融入的氛围。', t:1200 }]);
-    showEnding('age_crisis', ep5_endings);
-  } else {
-    addMsg('me','我有十年行业经验，独立带过5个项目，可以直接上手不需要培训。年龄带给我的是效率，不是负担。','14:05');
+    addMsg('me','好的赵总，我继续努力。','10:05');
     await runScene([
-      { type:'delay', ms:1500 },
-      { type:'them', text:'说得有道理。我们其实想找一个能独立带项目的人。', t:1200 },
+      { type:'stress', d:20, toast:'😞 压力+20' },
+      { type:'them', text:'嗯。你这个态度是对的。有些人就是太浮躁。', t:1000, time:'10:06' },
     ]);
-    showEnding('new_start', ep5_endings);
+  } else {
+    addMsg('me','赵总，我独立带了一年的项目。客户满意度全组最高，三个项目按时交付。我想请您帮我明确一下——除了继续做项目，我需要提升哪项具体能力才能得到认可？','10:05');
+    await runScene([
+      { type:'stress', d:-10, toast:'😤 有理有据' },
+      { type:'delay', ms:2500 },
+      { type:'them', text:'...这个。', t:800, time:'10:07' },
+      { type:'them', text:'我再考虑考虑。你先回去吧。', t:1000, time:'10:08' },
+    ]);
+  }
+
+  // === SCENE 3: Year-End Bonus ===
+  setTime('16:00');
+  addInfo('⏰ 年会 · 年终奖公布');
+  await runScene([
+    { type:'them', text:'今年的年终奖，我宣布——是三个月的工资！', t:1000, time:'16:01' },
+    { type:'info', text:'全场欢呼。有人开了香槟。' },
+    { type:'delay', ms:1000 },
+  ]);
+  addInfo('发工资那天——你发现是按三年前入职工资算的。三个月 = 7500元。你已经转正三年了，月薪1.5万。');
+  await runScene([
+    { type:'notification', text:'💬 同事群炸了：年终奖按入职工资算？？', d:2500, w:2000 },
+    { type:'them', text:'年终奖的计算规则，公司规定是按入职工资基准。你回去查一下合同。', t:1200, time:'16:05' },
+  ]);
+  const c3 = await showDecision(
+    '年终奖说好三个月工资，结果按入职时的2500算。你——',
+    '😡 "赵总，这个算法我不能接受。我需要一个解释。"',
+    '😐 "好的..."（默默认了，但心里开始想走）'
+  );
+
+  addMsg('me', c3==='left' ? '赵总，年终奖说好三个月工资，结果按三年前的入职工资算。这跟我们理解的完全不一样。我需要一个正式解释。' : '好的...','16:06');
+  await runScene([
+    { type:'stress', d:c3==='left'?20:25, toast:c3==='left'?'😡 据理力争':'😞 又一次妥协' },
+    { type:'them', text:c3==='left'?'这是公司的统一规定。你要是觉得不合理，可以走正式申诉流程。':'好了，明年会更好的。', t:1200, time:'16:07' },
+  ]);
+
+  // === SCENE 4: The Health Wake-up ===
+  setTime('9:00');
+  addInfo('⏰ 两周后 · 体检中心');
+  addInfo('体检报告：长期压力导致的高血压+焦虑指标异常。医生建议减少工作压力。');
+  await runScene([
+    { type:'notification', text:'🏥 体检报告提醒：您的压力指标已连续三年异常', d:3000, w:2500 },
+    { type:'delay', ms:1000 },
+    { type:'info', text:'你坐在体检中心的长椅上，翻着报告。三年前入职时还是健康的。' },
+  ]);
+  const c4 = await showDecision(
+    '体检报告亮红灯。医生说你长期压力导致的健康问题已经很明显了。你——',
+    '💪 "赵总，我辞职。"（想清楚了）',
+    '😰 "再忍忍吧...房贷还差十万。"'
+  );
+
+  if (c4 === 'left') {
+    addMsg('me','赵总，这是我的辞职信。\n\n不是因为年终奖。不是因为加班。是因为体检报告说我连续三年压力指标异常。\n\n我三年没涨薪，年终奖按入职工资算，一个人带三个项目却说我"能力不够"。\n\n我想通了：没什么工作值得用健康换。','9:15');
+    await runScene([
+      { type:'stress', d:-40, toast:'🕊️ 压力-40（如释重负）' },
+      { type:'delay', ms:3000 },
+      { type:'them', text:'......', t:2000 },
+      { type:'them', text:'你考虑清楚了？', t:800 },
+    ]);
+    addMsg('me','非常清楚。','9:18');
+    setTime('10:00');
+    addInfo('⏰ 三个月后...');
+    await runScene([
+      { type:'info', text:'三个月后，你找到了新工作。' },
+      { type:'info', text:'薪资涨了30%，领导说"做得不错"的时候你甚至会不习惯。' },
+      { type:'info', text:'最重要的事：体检指标全部恢复正常。' },
+    ]);
+    showEnding('new_life', ep3_endings);
+  } else {
+    addMsg('me','...再忍忍吧。房贷还差十万。','9:12');
+    await runScene([
+      { type:'stress', d:15, toast:'😞 压力+15（继续忍）' },
+    ]);
+
+    // === SCENE 5: Layoff Day ===
+    setTime('10:00');
+    addInfo('⏰ 又过了一个月 · HR约你到会议室');
+    await runScene([
+      { type:'them', text:'小李，坐。', t:600, time:'10:01' },
+      { type:'them', text:'公司最近业务调整...你知道的...', t:1000, time:'10:02' },
+      { type:'them', text:'所以...N+3...你接受吗？', t:1200, time:'10:03' },
+    ]);
+    const c5 = await showDecision(
+      'HR比你还紧张。你忍了三年没走，公司先动手了。N+3——',
+      '😏 "好，签吧。N+3比年终奖厚多了。"',
+      '😰 "我做错了什么？我能申诉吗？"'
+    );
+
+    addMsg('me', c5==='left' ? '好，签吧。N+3比我三年的年终奖加起来都多。谢谢公司。"优化"我。' : '我做错了什么？','10:04');
+    if (c5 === 'left') {
+      await runScene([
+        { type:'stress', d:-20, toast:'😏 解脱了' },
+        { type:'them', text:'你...不争取一下？', t:1000, time:'10:05' },
+      ]);
+      addMsg('me','不用了。N+3到账，我一个月的假放到年后再找。比上班划算。','10:06');
+    } else {
+      await runScene([
+        { type:'stress', d:10, toast:'😰' },
+        { type:'them', text:'这是公司的最终决定。N+3是最优方案了。', t:1000, time:'10:05' },
+      ]);
+    }
+
+    setTime('14:00');
+    addInfo('⏰ 一个月后 · 你开始找工作了');
+    addInfo('你今年35岁。打开招聘App，每个JD都写着——');
+    await runScene([
+      { type:'info', text:'"我们希望你：25-35岁，有5年+经验..."' },
+      { type:'info', text:'"团队年轻化，期待你的加入！"' },
+      { type:'info', text:'你把简历上的年龄删了。面试时被问年龄，你说35。对方"哦"了一声。' },
+      { type:'info', text:'那声"哦"——你听出了所有。' },
+    ]);
+    showEnding('age_35', ep3_endings);
   }
 }
 
-const ep5_endings = {
-  age_crisis: {
-    emoji:'🧊', title:'35岁的冬天',
-    subtitle:'面试官委婉地拒绝了你。\n但你决定自己干——做独立开发。\n收入比以前少，但不用被人用年龄衡量。\n你给20岁的自己写了封信：\n30岁之前就要考虑35岁的出路。',
-    stats:{'😞 压力峰值':'70%','🔄 结局':'转型独立','📖 经验':'提前规划'}, color:'#FF6B35',
+const ep3_endings = {
+  new_life: {
+    emoji:'🌅', title:'重获新生',
+    subtitle:'你主动辞职了。\n不是因为愤怒——是因为体检报告说你再不改变就要出事。\n\n新公司薪资涨了30%，领导会说"做得不错"。\n最重要的：体检指标全部恢复正常。\n\n如果有人也在经历PUA——\n你不是不够好，你是待错了地方。',
+    stats:{'❤️ 压力':'10%','🌅 结局':'主动辞职·新生','📖 经验':'健康 > 一切'},
+    color:'#34C759',
+    share:'🌅 我在《甲方模拟器》里拿到了真实结局——辞职后体检恢复正常。你试试？',
   },
-  new_start: {
-    emoji:'🌅', title:'N+3后的新开始',
-    subtitle:'你拿到了一个比原来薪资涨了20%的offer。\n面试官说：我们就需要你这样有经验的人。\n事实证明——不是所有公司都只看年龄。\n能力才是硬通货。',
-    stats:{'😌 压力峰值':'25%','🎉 结局':'涨薪跳槽','📖 经验':'N+3+涨薪=赚麻了'}, color:'#34C759',
+  age_35: {
+    emoji:'🧊', title:'35岁的冬天',
+    subtitle:'N+3到手。但35岁找工作才知道——\n有些门槛不是能力的问题，是年龄。\n\n你开始做独立开发。收入少了，但不再有人PUA你。\n\n给20岁的自己写封信：\n30岁之前，就要为35岁铺路。\n不是贩卖焦虑——是血泪教训。',
+    stats:{'😞 压力':'60%','🔄 结局':'转型独立','📖 经验':'提前规划35岁'},
+    color:'#FF6B35',
+    share:'🧊 在《甲方模拟器》体验了35岁被裁...真实到扎心。',
   },
 };
 
-// ── EPISODE 6: 砍价的艺术 ──
-async function ep_price_war() {
-  document.getElementById('npcName').innerHTML = '马总 <span style="font-size:10px;color:gold;">💎客户方</span>';
-  document.getElementById('npcAvatar').textContent = '马';
-  gameActive = true; setStress(10); setTime('11:00');
-  addInfo('📱 周二 · 上午 11:00 · 报价沟通');
-
-  await runScene([
-    { type:'delay', ms:500 },
-    { type:'them', text:'小李，报价收到了。', t:800, time:'11:01' },
-    { type:'them', text:'能便宜点吗？', t:600, time:'11:02' },
-  ]);
-  const c1 = await showDecision(
-    '甲方开口砍价。你知道市场价就是你的报价。但甲方永远会说贵——',
-    '😰 "那...我给您打个九折吧。"（直接降价）',
-    '😏 "可以，那我们去掉一些非核心功能，报价降20%。"（以退为进）'
-  );
-  if (c1 === 'left') {
-    addMsg('me','马总，我给您打个九折吧。','11:03');
-    await runScene([
-      { type:'stress', d:10, toast:'😰 压力+10（自己的利润被砍了）' },
-      { type:'them', text:'九折？八折吧。', t:600, time:'11:04' },
-      { type:'them', text:'不行？那我找别家了。', t:800, time:'11:05' },
-    ]);
-    showEnding('undercut', ep6_endings);
-  } else {
-    addMsg('me','马总，可以便宜。如果我们去掉售后支持，报价降20%；去掉质量保障，降30%。或者保持原价，功能和售后全包。您选哪个？','11:03');
-    await runScene([
-      { type:'stress', d:-5, toast:'😏 以退为进' },
-      { type:'them', text:'...功能不能少，售后不能少，质量不能少。', t:1200, time:'11:05' },
-      { type:'them', text:'算了，原价签吧。', t:800, time:'11:06' },
-    ]);
-    addInfo('一周后，马总加价续约了——因为他找了一圈发现同等服务下你的报价是最低的。');
-    showEnding('win', ep6_endings);
-  }
-}
-
-const ep6_endings = {
-  undercut: {
-    emoji:'🤡', title:'利润蒸发',
-    subtitle:'你打了八折，利润空间消失了。\n甲方觉得"果然还有降价空间"，\n下次还会压得更狠。\n乙方生存法则：你越容易降价，甲方越觉得你不值钱。',
-    stats:{'📉 利润':'打八折','😞 结局':'被压价','📖 经验':'不要轻易降价'}, color:'#FF3B30',
-  },
-  win: {
-    emoji:'🦈', title:'谈判赢家',
-    subtitle:'你没降价，甲方反而更信任你了。\n因为他发现：便宜的价格≠专业的服务。\n保护自己的报价，就是保护行业的下限。\n后来他介绍了三个客户给你。',
-    stats:{'📈 利润':'100%','🎉 结局':'原价签约+转介绍','📖 经验':'贵有贵的道理'}, color:'#34C759',
-  },
+// ═══════════════════════════════════════
+// EPISODE MAP (updated)
+// ═══════════════════════════════════════
+const EP_MAP = {
+  designer_long_day: ep_designer_long_day,
+  apocalypse_requirements: ep_apocalypse_requirements,
+  the_last_straw: ep_the_last_straw,
 };
 
 // ═══════════════════════════════════════
