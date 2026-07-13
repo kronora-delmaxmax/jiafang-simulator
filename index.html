@@ -234,6 +234,7 @@ async function startGame(){
   if(c2==='left'){
     addMsg('me','好的王总，我尽量。','9:45');
     await runScene([{type:'stress',d:10,toast:'😰 压力+10'},{type:'them',text:'很好。下午三点前给我新方案。',t:800,time:'9:46'}]);
+    addInfo('💡 你想到上次一个同行说的办法：LOGO放大一倍，透明度调到10%。甲方说：完美！这就是我要的感觉。');
   }else{
     addMsg('me','王总，我找了几个"呼吸感"的参考方向：\n\nA方向：通透留白\nB方向：渐变层次\nC方向：动态感\n\n您看哪个更接近客户想要的感觉？','9:45');
     await runScene([{type:'stress',d:-10,toast:'😌 压力-10（精准引导）'},{type:'them',text:'嗯...C方向不错。就照这个来吧。',t:1000,time:'9:47'}]);
@@ -309,10 +310,11 @@ async function startGame(){
   await runScene([
     {type:'them',text:'嗯，整体方向还行...',t:800,time:'14:20'},
     {type:'them',text:'这个配色我觉得可以再...',t:1000,time:'14:21'},
-    {type:'notification',text:'💬 同事阿强：「这傻X甲方又改需求，今晚继续磨他」',d:5000,w:4000},
-    {type:'delay',ms:2500},
   ]);
-  addInfo('⚠️ 全场安静了五秒钟。投屏上所有人都看到了那条微信。');
+  // Screen share horror — show as in-chat notification so it's ALWAYS visible
+  addInfo('⚠️ 你的微信弹出一条消息——');
+  addMsg('info','<span style="color:#FF453A;font-size:14px;font-weight:700;">💬 同事阿强</span><br><span style="color:#fff;font-size:16px;">「这傻X甲方又改需求，<br>今晚继续磨他」</span>');
+  addInfo('全场安静了五秒钟。投屏上所有人都看到了。');
   const c4=await showDecision(
     '社死现场！你的微信弹窗出现在共享屏幕上——甲方和全团队都看到了。',
     '😱 "那个不是我发的！是同事！不对...不是我的微信！"（慌乱）',
@@ -335,7 +337,10 @@ async function startGame(){
     {type:'voice',time:'14:28'},
     {type:'them',text:'「语音转文字」那个首页的banner啊，感觉不太对，你懂我意思吧，就是那个...那个感觉，你改一下',t:2000,time:'14:29'},
     {type:'notification',text:'📅 提醒：17:00 部门周会',d:2000,w:1500},
-    {type:'them',text:'还有——刚才说到预算。',t:800,time:'14:30'},
+    {type:'delay',ms:600},
+  ]);
+  addInfo('💡 你突然想起在数英网看到的一段话：\n"甲方不回消息时，在给+1+2+3逐级汇报等拍板。\n在汇总各部门互相冲突的反馈。在写无穷无尽的日报周报PPT。\n甲方也是打工人，他们上面还有甲方。"');
+  await runScene([
     {type:'them',text:'你这个报价不便宜啊。XX设计院做一个方案才多少钱？',t:1200,time:'14:31'},
     {type:'them',text:'人家报价是你的一半，效果也不差。都是做设计的，能有多大区别？',t:1200,time:'14:32'},
   ]);
@@ -345,8 +350,8 @@ async function startGame(){
     '😐 "那我给您打个折吧。"'
   );
   if(c5==='left'){
-    addMsg('me','王总，这是XX设计院设计师的真实工资条。\n\n月薪到手2000，并行8个项目，一人干三个人的活。\n\n您说的"便宜"，是建立在对设计师极限压榨的基础上的。\n\n我们的报价不高——是对团队劳动的基本尊重。','14:33');
-    await runScene([{type:'stress',d:-20,toast:'🔥 压力-20（用数据说话）'},{type:'delay',ms:3500},{type:'them',text:'........................',t:2500,time:'14:36'},{type:'them',text:'我知道了。',t:1000,time:'14:37'},{type:'them',text:'方案按你的节奏来。预算不变。谢谢你的坦诚。',t:1200,time:'14:38'}]);
+    addMsg('me','王总，我说个事。\n\n我有个朋友在XX设计院——就是您说的那个"便宜"的设计院。\n\n他给我看过他的工资条：\n月薪到手 2000 出头。\n同时并行 8 个项目。\n一人干三个人的活。\n\n甲方催他改图，他不回复——不是摆烂，是8个甲方同时在催。\n客服说改图太慢，他说"拿2000块工资，天王老子来催也没用。"\n\n您说的"便宜"，建立在把人当耗材的基础上。\n同一个行业，我不想看到同事被压到2000块。\n\n我们的报价不高——是对团队劳动的基本尊重。','14:33');
+    await runScene([{type:'stress',d:-20,toast:'🔥 压力-20（用真实数据说话）'},{type:'delay',ms:5000},{type:'them',text:'........................................',t:4000,time:'14:38'},{type:'them',text:'我知道了。',t:1000,time:'14:39'},{type:'them',text:'我从没想过这个问题。方案按你的节奏来。预算不变。谢谢你的坦诚。',t:1500,time:'14:40'}]);
   }else{
     addMsg('me','王总，我给您打个八折。','14:33');
     await runScene([{type:'stress',d:20,toast:'😞 压力+20（利润被砍）'},{type:'them',text:'八折？七折吧。行，方案你尽快。',t:1000,time:'14:35'}]);
