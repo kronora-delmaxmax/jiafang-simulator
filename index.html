@@ -139,7 +139,7 @@ const endingCard=document.getElementById('endingCard'),toast=document.getElement
 const gameTime=document.getElementById('gameTime'),stressFill=document.getElementById('stressFill');
 const swipeLeft=document.getElementById('swipeLeft'),swipeRight=document.getElementById('swipeRight');
 
-let stressLevel=20,currentDecision=null,gameActive=false,lastDirection=null,callResolve=null,currentResolve=null;
+let stressLevel=20,currentDecision=null,gameActive=false,lastDirection=null,callResolve=null,currentResolve=null,lastCallResult=null;
 
 function setTime(t){gameTime.textContent=t}
 function setStress(v){stressLevel=Math.max(0,Math.min(100,v));stressFill.style.height=stressLevel+'%';stressFill.style.background=stressLevel<30?'#34C759':stressLevel<60?'#FFCC00':'#FF3B30'}
@@ -165,7 +165,7 @@ decisionCard.addEventListener('pointerup',e=>{if(!sa)return;sa=false;decisionCar
 function triggerCall(){return new Promise(resolve=>{callResolve=resolve;callOverlay.classList.add('active');document.getElementById('phone').classList.add('shake');setTimeout(()=>document.getElementById('phone').classList.remove('shake'),600)})}
 function handleCall(accepted){callOverlay.classList.remove('active');if(callResolve){const cb=callResolve;callResolve=null;cb(accepted)}}
 
-async function runScene(msgs){for(const m of msgs){if(!gameActive)break;await new Promise(r=>setTimeout(r,300));if(m.type==='info'){addInfo(m.text);if(m.time)setTime(m.time)}else if(m.type==='them'){await showTyping(m.t||800);addMsg('them',m.text,m.time)}else if(m.type==='me'){addMsg('me',m.text,m.time)}else if(m.type==='voice'){await showTyping(400);addVoice(m.time)}else if(m.type==='notif'){showNotif(m.text,m.d||2500);await new Promise(r=>setTimeout(r,m.w||1800))}else if(m.type==='call'){const ok=await triggerCall();if(ok){for(const l of m.lines){await showTyping(l.t||600);addMsg('them',l.text,l.time)}}}else if(m.type==='stress'){setStress(stressLevel+m.d);showToast(m.toast||(m.d>0?'😰+'+m.d:'😌'+m.d))}else if(m.type==='delay'){await new Promise(r=>setTimeout(r,m.ms))}}}
+async function runScene(msgs){for(const m of msgs){if(!gameActive)break;await new Promise(r=>setTimeout(r,300));if(m.type==='info'){addInfo(m.text);if(m.time)setTime(m.time)}else if(m.type==='them'){await showTyping(m.t||800);addMsg('them',m.text,m.time)}else if(m.type==='me'){addMsg('me',m.text,m.time)}else if(m.type==='voice'){await showTyping(400);addVoice(m.time)}else if(m.type==='notif'){showNotif(m.text,m.d||2500);await new Promise(r=>setTimeout(r,m.w||1800))}else if(m.type==='call'){const ok=await triggerCall();lastCallResult=ok;if(ok){for(const l of m.lines){await showTyping(l.t||600);addMsg('them',l.text,l.time)}}}else if(m.type==='stress'){setStress(stressLevel+m.d);showToast(m.toast||(m.d>0?'😰+'+m.d:'😌'+m.d))}else if(m.type==='delay'){await new Promise(r=>setTimeout(r,m.ms))}}}
 
 function showEnding(type){gameActive=false;decisionOverlay.classList.remove('active');callOverlay.classList.remove('active');const e=ENDINGS[type];endingCard.innerHTML=`<div class="ending-emoji">${e.emoji}</div><div class="ending-title" style="background:linear-gradient(135deg,${e.color},${e.color}88);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">${e.title}</div><div class="ending-subtitle">${e.subtitle.replace(/\n/g,'<br>')}</div><div class="ending-stats">${Object.entries(e.stats).map(([k,v])=>`<div class="ending-stat"><div class="ending-stat-val">${v}</div><div class="ending-stat-label">${k}</div></div>`).join('')}</div><button class="ending-share" onclick="shareEnding('${type}')">📤 分享结局</button>`;endingOverlay.classList.add('active');spawnParticles(e.color);setStress(type.includes('quit')||type.includes('fired')?95:type.includes('promoted')||type.includes('boss')?15:60)}
 function shareEnding(type){const t=ENDINGS[type];const text=t.share||'我在《甲方模拟器》里经历了魔幻职场一天！你能活到第几集？';if(navigator.share){navigator.share({title:'甲方模拟器',text}).catch(()=>{})}else{navigator.clipboard.writeText(text).then(()=>showToast('📋 已复制！')).catch(()=>showToast('长按截屏分享📱'))}}
@@ -255,17 +255,49 @@ async function startGame(){
       {text:'下午三点前给我新方案。好吧？',t:1000},
     ]},
   ]);
-  const c3=await showDecision(
-    '王总来电："高端大气上档次"+"就加一个按钮"+"对标微信80%"+语音视频文件传输。你——',
-    '😤 "好的王总。"（强忍怒火，先答应）',
-    '🤨 "王总，能具体说说高端大气是什么感觉吗？另外那个按钮的功能我需要评估一下时间。"'
-  );
-  if(c3==='left'){
-    addMsg('me','好的王总，我马上改。','10:35');
-    await runScene([{type:'stress',d:15,toast:'😰 压力+15（五彩斑斓+对标微信）'},{type:'them',text:'很好。另外PPT也准备一下，明天汇报用。',t:1000,time:'10:36'}]);
+
+  if(!lastCallResult){
+    // DECLINED THE CALL — real consequences
+    addInfo('📵 你挂断了王总的电话');
+    await runScene([
+      {type:'stress',d:15,toast:'😰 压力+15（挂了王总电话）'},
+      {type:'delay',ms:800},
+      {type:'notification',text:'📵 未接来电：王总 (1)',d:2000,w:1500},
+      {type:'them',text:'你居然不接我电话？？？',t:600,time:'10:35'},
+      {type:'them',text:'我不管你在干什么。客户这边急得很。',t:800,time:'10:36'},
+      {type:'them',text:'我直接跟你说吧——客户全盘推翻了之前的方案。',t:1000,time:'10:37'},
+      {type:'them',text:'他们说整个方向都不对，要"高端大气上档次，低调奢华有内涵"。',t:1500,time:'10:38'},
+      {type:'them',text:'你那个太小气了。',t:600,time:'10:38'},
+      {type:'them',text:'还有——客户要加一个功能，对标微信。语音视频文件传输都要。',t:1200,time:'10:39'},
+      {type:'them',text:'就因为你不接电话，这些我只能打字说。字打完了你明白了吗？',t:1200,time:'10:40'},
+      {type:'them',text:'下午三点，我要看到方案。别让我再说第二遍。',t:1000,time:'10:41'},
+    ]);
+    const c3_decline=await showDecision(
+      '挂了王总电话，他发了一大段怒气冲冲的文字。你错过了电话沟通的机会，现在只能从文字里猜他的意思——',
+      '😰 "好的王总，对不起刚才在忙。马上改。"（认错）',
+      '😤 "王总，刚才在跟客户确认需求。现在可以电话沟通一下吗？"（试图挽回）'
+    );
+    if(c3_decline==='left'){
+      addMsg('me','好的王总，对不起刚才在忙。马上改。','10:42');
+      await runScene([{type:'stress',d:10,toast:'😰 压力+10'},{type:'them',text:'快点。PPT也准备一下。',t:600,time:'10:43'}]);
+    }else{
+      addMsg('me','王总，刚才在跟另一个客户沟通需求。我现在打给您可以吗？','10:42');
+      await runScene([{type:'stress',d:-5,toast:'😌 压力-5（挽回了一点）'},{type:'them',text:'...行。打过来。',t:800,time:'10:43'},{type:'them',text:'（电话接通）行了，知道你不是故意的。方案下午三点，PPT明天也要。',t:1200,time:'10:45'}]);
+    }
   }else{
-    addMsg('me','王总，方向很有启发。能发我几张客户喜欢的参考图吗？我先看看客户具体偏好什么风格。另外那个按钮功能——我需要评估一下，即时通讯+音视频+文件传输，这三个每个都是独立系统。','10:35');
-    await runScene([{type:'stress',d:-10,toast:'😌 压力-10'},{type:'them',text:'行，我让客户发几张参考过来。功能的事你评估完跟我说。',t:1200,time:'10:37'},{type:'them',text:'对了，PPT也准备一下。',t:800,time:'10:38'}]);
+    // ACCEPTED THE CALL — saw all the lines, better context
+    const c3=await showDecision(
+      '王总来电："高端大气上档次"+"就加一个按钮"+"对标微信80%"+语音视频文件传输。你——',
+      '😤 "好的王总。"（强忍怒火，先答应）',
+      '🤨 "王总，能具体说说高端大气是什么感觉吗？另外那个按钮的功能我需要评估一下时间。"'
+    );
+    if(c3==='left'){
+      addMsg('me','好的王总，我马上改。','10:35');
+      await runScene([{type:'stress',d:15,toast:'😰 压力+15（五彩斑斓+对标微信）'},{type:'them',text:'很好。另外PPT也准备一下，明天汇报用。',t:1000,time:'10:36'}]);
+    }else{
+      addMsg('me','王总，方向很有启发。能发我几张客户喜欢的参考图吗？我先看看客户具体偏好什么风格。另外那个按钮功能——我需要评估一下，即时通讯+音视频+文件传输，这三个每个都是独立系统。','10:35');
+      await runScene([{type:'stress',d:-10,toast:'😌 压力-10'},{type:'them',text:'行，我让客户发几张参考过来。功能的事你评估完跟我说。',t:1200,time:'10:37'},{type:'them',text:'对了，PPT也准备一下。',t:800,time:'10:38'}]);
+    }
   }
 
   // ══ SCENE 3: Screen Share Horror ══
