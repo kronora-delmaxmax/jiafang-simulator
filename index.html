@@ -3,12 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-<title>双世界牛马养成 · 原型 v0.4</title>
+<title>双世界牛马养成 · 原型 v0.5</title>
 <style>
 :root{
   --bg:#F6F1E9;--bg2:#EFE6D8;--ink:#3A332B;--line:#D9CDB6;--accent:#D9A37A;
   --dark:#0E1014;--dark2:#1A1D24;--darkink:#C5CDD9;--darkline:#2A2F3A;
   --danger:#A83C3C;--cool:#97B8D8;--exp:#6A8FB8;
+  --r-md:10px;--r-lg:14px;--r-xl:18px;
+  --r-md-d:4px;--r-lg-d:6px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
@@ -36,31 +38,30 @@ body.dark .bar.injury > i{background:linear-gradient(90deg,var(--danger),#5C1A1A
 .val{text-align:right;font-size:9px;opacity:.6}
 .val.lvl{color:var(--exp);font-weight:700;opacity:1}
 
-/* === 主舞台 === */
 .stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;position:relative;padding:8px 16px 4px;min-height:0;overflow:hidden}
 .scene-tag{position:absolute;top:6px;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:2px;padding:2px 8px;border:1px solid var(--line);border-radius:99px;background:rgba(255,255,255,.4);transition:all .6s;z-index:2}
 body.dark .scene-tag{border-color:var(--darkline);background:rgba(0,0,0,.3);color:var(--darkink)}
-.task-badge{position:absolute;top:6px;right:14px;font-size:9px;padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.6);border:1px solid var(--line);color:var(--ink);transition:all .6s;z-index:2}
+.task-badge{position:absolute;top:6px;right:14px;font-size:9px;padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.6);border:1px solid var(--line);color:var(--ink);transition:all .6s;z-index:2;cursor:pointer}
 body.dark .task-badge{border-color:var(--darkline);background:rgba(0,0,0,.4);color:var(--darkink)}
 .lvl-badge{position:absolute;top:6px;left:14px;font-size:9px;padding:2px 7px;border-radius:99px;background:rgba(106,143,184,.18);border:1px solid var(--exp);color:var(--exp);font-weight:700;letter-spacing:1px;z-index:2}
 
-/* === 工位元素（表世界） === */
+/* 表世界元素：圆角偏大、柔光 */
 .office-deco{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .6s;overflow:hidden}
 body[data-scene="work"] .office-deco{opacity:1}
-.office-deco .note{position:absolute;width:36px;height:24px;background:#F8E9A8;border:1px solid #C8B776;border-radius:2px;transform:rotate(-6deg);box-shadow:1px 1px 0 rgba(0,0,0,.1);font-size:7px;color:#8A6A2A;padding:2px;line-height:1.2;overflow:hidden}
+.office-deco .note{position:absolute;width:36px;height:24px;background:#F8E9A8;border:1px solid #C8B776;border-radius:4px;transform:rotate(-6deg);box-shadow:1px 1px 0 rgba(0,0,0,.1);font-size:7px;color:#8A6A2A;padding:2px;line-height:1.2;overflow:hidden}
 .office-deco .note::before{content:'';position:absolute;left:4px;right:4px;top:7px;bottom:5px;background:repeating-linear-gradient(0deg,transparent,transparent 3px,#C8B776 3px,#C8B776 4px)}
 .office-deco .note-1{top:30px;left:18px}
 .office-deco .note-2{top:80px;right:22px;transform:rotate(8deg);background:#E8C8A8}
-.office-deco .calendar{position:absolute;top:46px;right:14px;width:30px;height:30px;background:#fff;border:1px solid var(--line);border-radius:3px;font-size:7px;color:var(--ink);text-align:center;padding-top:2px}
+.office-deco .calendar{position:absolute;top:46px;right:14px;width:30px;height:30px;background:#fff;border:1px solid var(--line);border-radius:6px;font-size:7px;color:var(--ink);text-align:center;padding-top:2px}
 body.dark .office-deco .calendar{background:#222}
-.office-deco .calendar::before{content:'';position:absolute;top:-3px;left:50%;transform:translateX(-50%);width:14px;height:6px;background:#C97070;border-radius:0 0 3px 3px}
-.office-deco .doc{position:absolute;width:30px;height:38px;background:#fff;border:1px solid var(--line);border-radius:2px;box-shadow:0 1px 2px rgba(0,0,0,.1);font-size:6px;color:var(--ink);padding:3px 2px;line-height:1.3}
+.office-deco .calendar::before{content:'';position:absolute;top:-3px;left:50%;transform:translateX(-50%);width:14px;height:6px;background:#C97070;border-radius:0 0 4px 4px}
+.office-deco .doc{position:absolute;width:30px;height:38px;background:#fff;border:1px solid var(--line);border-radius:4px;box-shadow:0 1px 2px rgba(0,0,0,.1);font-size:6px;color:var(--ink);padding:3px 2px;line-height:1.3}
 body.dark .office-deco .doc{background:#1A1D24;color:var(--darkink)}
 .office-deco .doc::before{content:'';position:absolute;left:3px;right:3px;top:7px;bottom:5px;background:repeating-linear-gradient(0deg,transparent,transparent 2px,var(--line) 2px,var(--line) 3px)}
 .office-deco .doc-1{bottom:48px;left:14px;transform:rotate(-4deg)}
 .office-deco .doc-2{bottom:54px;right:16px;transform:rotate(3deg)}
 
-/* === 黑暗元素（里世界） === */
+/* 里世界元素：边角锐利、破碎 */
 .dark-deco{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .6s;overflow:hidden}
 body[data-scene="battle"] .dark-deco{opacity:1}
 .dark-deco .crack{position:absolute;font-size:80px;color:rgba(168,60,60,.15);font-weight:900;line-height:1;transform:rotate(-15deg)}
@@ -71,22 +72,23 @@ body[data-scene="battle"] .dark-deco{opacity:1}
 .dark-deco .monster-2{right:12px}
 .dark-deco .moon{position:absolute;top:30px;right:24px;width:24px;height:24px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#E0E0E0,#7A7A8A);box-shadow:0 0 12px rgba(151,184,216,.4);opacity:.6}
 .dark-deco .moon::before{content:'';position:absolute;top:2px;right:3px;width:6px;height:6px;border-radius:50%;background:rgba(14,16,20,.5)}
+/* 月影雾气：雾气层 */
+.dark-deco .mist{position:absolute;left:0;right:0;bottom:0;height:80px;background:linear-gradient(180deg,transparent 0%,rgba(151,184,216,.06) 30%,rgba(151,184,216,.15) 100%);filter:blur(6px);pointer-events:none;animation:mistDrift 8s ease-in-out infinite}
+@keyframes mistDrift{0%,100%{transform:translateX(0);opacity:.8}50%{transform:translateX(8px);opacity:1}}
 .dark-deco .vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,.4) 100%);pointer-events:none}
 
-/* === 立绘 === */
 .sprite{width:128px;height:192px;position:relative;display:flex;align-items:flex-end;justify-content:center;image-rendering:pixelated;z-index:3}
 .sprite img{width:100%;height:100%;object-fit:contain;display:block;image-rendering:pixelated;transition:filter .4s,transform .4s}
 .sprite[data-form="work"] img{transform:translateY(6px) scale(.96);filter:brightness(1.02) saturate(.92)}
 .sprite[data-form="battle"] img{transform:translateY(0) scale(1);filter:brightness(.92) contrast(1.08)}
-.sprite .desk{position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);width:240px;height:18px;background:var(--bg2);border-radius:4px 4px 0 0;box-shadow:0 2px 0 rgba(0,0,0,.05);opacity:0;transition:opacity .4s;pointer-events:none;z-index:1}
+.sprite .desk{position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);width:240px;height:18px;background:var(--bg2);border-radius:6px 6px 0 0;box-shadow:0 2px 0 rgba(0,0,0,.05);opacity:0;transition:opacity .4s;pointer-events:none;z-index:1}
 body.dark .sprite .desk{background:#15181F;box-shadow:0 2px 0 rgba(0,0,0,.5)}
-.sprite .mug{position:absolute;bottom:14px;right:-12px;width:12px;height:14px;background:#C97070;border-radius:1px 1px 3px 3px;opacity:0;transition:opacity .4s;pointer-events:none;z-index:1}
-.sprite .mug::after{content:'';position:absolute;right:-3px;top:3px;width:3px;height:6px;border:1.5px solid #C97070;border-left:none;border-radius:0 3px 3px 0}
+.sprite .mug{position:absolute;bottom:14px;right:-12px;width:12px;height:14px;background:#C97070;border-radius:2px 2px 4px 4px;opacity:0;transition:opacity .4s;pointer-events:none;z-index:1}
+.sprite .mug::after{content:'';position:absolute;right:-3px;top:3px;width:3px;height:6px;border:1.5px solid #C97070;border-left:none;border-radius:0 4px 4px 0}
 .sprite[data-form="work"] .desk{opacity:1}
 .sprite[data-form="work"] .mug{opacity:1}
 
-/* === 活动面板 === */
-.activity{margin:4px 16px 6px;padding:6px 10px;background:rgba(255,255,255,.55);border:1px solid var(--line);border-radius:8px;font-size:11px;line-height:1.5;transition:all .6s}
+.activity{margin:4px 16px 6px;padding:6px 10px;background:rgba(255,255,255,.55);border:1px solid var(--line);border-radius:var(--r-lg);font-size:11px;line-height:1.5;transition:all .6s}
 body.dark .activity{background:rgba(255,255,255,.04);border-color:var(--darkline);color:var(--darkink)}
 .activity .row{display:flex;justify-content:space-between}
 .activity .row span:first-child{opacity:.7}
@@ -94,24 +96,25 @@ body.dark .activity{background:rgba(255,255,255,.04);border-color:var(--darkline
 .task-tag{display:inline-block;padding:1px 5px;border-radius:99px;font-size:8px;margin-right:3px;background:rgba(217,163,122,.18);color:var(--accent)}
 body.dark .task-tag{background:rgba(151,184,216,.2);color:var(--cool)}
 
-/* === 按钮 === */
 .actions{display:flex;gap:6px;padding:6px 14px 10px;border-top:1px dashed var(--line);background:inherit;transition:border-color .6s}
 body.dark .actions{border-color:var(--darkline)}
-.btn{flex:1;border:1px solid var(--line);background:rgba(255,255,255,.6);color:var(--ink);font:inherit;font-size:11px;padding:8px 6px;border-radius:8px;cursor:pointer;transition:transform .15s,background .2s,border-color .2s}
+.btn{flex:1;border:1px solid var(--line);background:rgba(255,255,255,.6);color:var(--ink);font:inherit;font-size:11px;padding:8px 6px;border-radius:var(--r-lg);cursor:pointer;transition:transform .15s,background .2s,border-color .2s}
+body.dark .btn{background:rgba(255,255,255,.05);color:var(--darkink);border-color:var(--darkline)}
 .btn:active{transform:translateY(1px) scale(.98)}
 .btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
-.btn.danger{background:rgba(168,60,60,.12);color:var(--danger);border-color:rgba(168,60,60,.3)}
-body.dark .btn{background:rgba(255,255,255,.05);color:var(--darkink);border-color:var(--darkline)}
 body.dark .btn.primary{background:var(--cool);color:#0E1014;border-color:var(--cool)}
-body.dark .btn.danger{background:rgba(168,60,60,.18);color:#E89090;border-color:rgba(168,60,60,.4)}
+/* 里世界按钮锐化 */
+body.dark .btn{border-radius:var(--r-md-d)}
 
 .roster{position:absolute;inset:0;background:inherit;z-index:50;display:none;flex-direction:column;padding:14px}
 .roster.open{display:flex}
 .roster h2{font-size:13px;letter-spacing:2px;margin-bottom:10px;opacity:.8}
 .roster .grid{display:grid;grid-template-columns:1fr;gap:8px;overflow-y:auto;flex:1}
-.card{display:grid;grid-template-columns:56px 1fr auto;gap:10px;align-items:center;padding:8px;border:1px solid var(--line);border-radius:10px;cursor:pointer;background:rgba(255,255,255,.4);transition:transform .15s}
+.card{display:grid;grid-template-columns:56px 1fr auto;gap:10px;align-items:center;padding:8px;border:1px solid var(--line);border-radius:var(--r-lg);cursor:pointer;background:rgba(255,255,255,.4);transition:transform .15s}
+body.dark .card{border-radius:var(--r-md-d)}
 .card:active{transform:scale(.98)}
 .card .ava{width:56px;height:84px;border-radius:6px;position:relative;overflow:hidden;background:linear-gradient(180deg,var(--c1),var(--c2));display:flex;align-items:center;justify-content:center}
+body.dark .card .ava{border-radius:var(--r-md-d)}
 .card .ava img{width:100%;height:100%;object-fit:cover;display:block;image-rendering:pixelated}
 .card .info h3{font-size:12px;margin-bottom:3px}
 .card .info p{font-size:9px;opacity:.65;line-height:1.4}
@@ -124,8 +127,8 @@ body.dark .card.active{border-color:var(--cool);box-shadow:0 0 0 2px var(--cool)
 .modal{position:absolute;inset:0;background:rgba(0,0,0,.5);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
 .modal.open{display:flex;animation:fadeIn .3s}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.modal .box{width:100%;max-width:360px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:18px;max-height:80vh;overflow-y:auto}
-body.dark .modal .box{background:#0E1014;color:var(--darkink);border-color:var(--darkline)}
+.modal .box{width:100%;max-width:360px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px;max-height:80vh;overflow-y:auto}
+body.dark .modal .box{background:#0E1014;color:var(--darkink);border-color:var(--darkline);border-radius:var(--r-md-d)}
 .modal h3{font-size:13px;letter-spacing:2px;margin-bottom:10px;opacity:.8}
 .modal .list{font-size:12px;line-height:1.9}
 .modal .list .item{display:flex;justify-content:space-between;border-bottom:1px dashed var(--line);padding:4px 0}
@@ -147,7 +150,6 @@ body.dark .task-desc{background:rgba(255,255,255,.04);border-left-color:var(--co
 
 .toast{position:absolute;top:48px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.7);color:#fff;font-size:11px;padding:6px 14px;border-radius:99px;opacity:0;pointer-events:none;transition:opacity .3s;z-index:200;max-width:80%;text-align:center}
 .toast.show{opacity:1}
-
 .mode-stripe{position:absolute;left:0;right:0;top:0;height:3px;z-index:5;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0;transition:opacity .5s}
 body.dark .mode-stripe{background:linear-gradient(90deg,transparent,var(--cool),transparent);opacity:1}
 </style>
@@ -171,8 +173,7 @@ body.dark .mode-stripe{background:linear-gradient(90deg,transparent,var(--cool),
   <div class="stage">
     <div class="lvl-badge" id="lvlBadge">⚔ Lv.1</div>
     <div class="scene-tag" id="sceneTag">表世界 · 打工</div>
-    <div class="task-badge" id="taskBadge">📋 行政</div>
-    <!-- 表世界元素 -->
+    <div class="task-badge" id="taskBadge" title="点击自动换任务">📋 行政</div>
     <div class="office-deco">
       <div class="doc doc-1"></div>
       <div class="doc doc-2"></div>
@@ -180,7 +181,6 @@ body.dark .mode-stripe{background:linear-gradient(90deg,transparent,var(--cool),
       <div class="note note-1"></div>
       <div class="note note-2"></div>
     </div>
-    <!-- 里世界元素 -->
     <div class="dark-deco">
       <div class="vignette"></div>
       <div class="moon"></div>
@@ -188,6 +188,7 @@ body.dark .mode-stripe{background:linear-gradient(90deg,transparent,var(--cool),
       <div class="crack crack-2">✧</div>
       <div class="monster monster-1">👹</div>
       <div class="monster monster-2">👻</div>
+      <div class="mist"></div>
     </div>
     <div class="sprite" id="sprite" data-form="work">
       <img id="spriteImg" src="images/sprite-wenwan-work.png" alt="立绘">
@@ -203,7 +204,6 @@ body.dark .mode-stripe{background:linear-gradient(90deg,transparent,var(--cool),
   </div>
   <div class="actions">
     <button class="btn" id="btnRoster">角色</button>
-    <button class="btn" id="btnTask">换任务</button>
     <button class="btn" id="btnSettle">结算</button>
     <button class="btn primary" id="btnBoost">🍵 咖啡</button>
   </div>
@@ -213,14 +213,6 @@ body.dark .mode-stripe{background:linear-gradient(90deg,transparent,var(--cool),
   <h2>选择角色</h2>
   <div class="grid" id="rosterGrid"></div>
   <div class="close" id="rosterClose">— 关闭 —</div>
-</div>
-
-<div class="modal" id="taskModal">
-  <div class="box">
-    <h3 id="taskTitle">分配新任务</h3>
-    <div class="task-desc" id="taskDesc">—</div>
-    <div class="btn-row" id="taskChoices"></div>
-  </div>
 </div>
 
 <div class="modal" id="settleModal">
@@ -268,7 +260,7 @@ body.dark .mode-stripe{background:linear-gradient(90deg,transparent,var(--cool),
 <div class="toast" id="toast"></div>
 
 <script>
-/* ===== 任务池（按角色岗位设计） ===== */
+/* ===== 任务池 ===== */
 const TASKS={
   wenwan:[
     {type:'admin',name:'整理部门周报',desc:'把 7 个组的周报汇总成一份大周报，要 17:00 前交到王总桌上。',exp:8,baseRate:1.1,tiredRate:0.7,moodRate:0.5},
@@ -310,9 +302,7 @@ const EVENTS=[
   {icon:'✨',title:'被王总点名表扬',desc:'"这次周报写得很清楚。"——微信群里，王总 @了你。',left:'默默收藏',right:'回复感谢',leftFx:{mood:6,favor:2},rightFx:{mood:8,favor:3,pressure:-2},rare:true},
 ];
 
-/* ===== 状态提示配置 ===== */
 const SYS_HINTS=[
-  // {condition, icon, title, desc, choices}
   {when:()=>PlayerData.tired>=85,icon:'😫',title:'太累了',desc:'你的身体已经在发出警告，再硬撑可能要出大问题。要不要现在撤？',
    choices:[{lbl:'撤回表世界（立即）',fx:{tired:-30,mood:5,pressure:-10},action:'work'},{lbl:'再撑一会',fx:{tired:10,injury:5},action:'none'}]},
   {when:()=>PlayerData.injury>=70,icon:'🩸',title:'伤势过重',desc:'你的伤口还在渗血，强行战斗可能留下永久性损伤。',choices:[{lbl:'立刻撤退疗伤',fx:{injury:-40,hp:15},action:'work'},{lbl:'咬牙撑完',fx:{injury:15,hp:-10},action:'none'}]},
@@ -320,26 +310,102 @@ const SYS_HINTS=[
   {when:()=>PlayerData.pressure>=75,icon:'💢',title:'压力过大',desc:'积压的工作和未释放的情绪快要溢出了。给自己一点缓冲？',choices:[{lbl:'深呼吸调整',fx:{pressure:-25,mood:3},action:'none'},{lbl:'继续硬撑',fx:{pressure:10,hp:-5},action:'none'}]},
 ];
 
-/* ===== 角色 ===== */
+/* ===================================================
+ * 角色定义（含 v0.5 数值差异化）
+ *
+ * 文档对照：
+ * - 温晚：恢复快/疲劳低/挂机最稳/爆发低/情绪永远稳定
+ *   → recover 1.5, fatigueRate 0.4, battleExp 0.7 (低)
+ *   → moodEventResistance 0.33 (事件心情影响 1/3)
+ *   → moodFloor 60 (心情基线不跌破 60)
+ *
+ * - 陆则：均衡全能/打工效率最高/胜率稳定/微压内耗
+ *   → recover 1.0, fatigueRate 0.9, workEff 1.4 (高)
+ *   → workExp 1.3 (任务 exp +30%)
+ *   → internalBurn: 压力不涨但心情持续慢掉 0.05/s
+ *
+ * - 沈逾：爆发极高/升级快/疲劳累积极快/情绪波动大
+ *   → recover 0.7, fatigueRate 1.8, battleDmg 1.8
+ *   → battleExp 1.5 (战斗 exp +50%)
+ *   → moodEventResistance 1.5 (事件心情影响 1.5x)
+ *   → workMoodPenalty 0.3 (打工心情消耗 1.3x)
+ * =================================================== */
 const ROSTER={
-  wenwan:{id:'wenwan',name:'温晚',gender:'女',surface:'文职助理',hidden:'静默薄刃肃清者',bio:'温顺、耐心、讨好型。温柔都是伪装，习惯性自我压抑。',traits:{recover:1.4,fatigueRate:0.5,battleDmg:0.4,workEff:0.7},story:'……每次抬头笑的时候，我都觉得肩膀很重。其实我也不知道"乖"是什么形状，只是大家都这么说，我便学了下来。',story2:'夜里我才知道，自己能握稳刀。原来我并不是没力气，只是白天不允许自己用力。'},
-  luzhe:{id:'luzhe',name:'陆则',gender:'男',surface:'资深骨干',hidden:'理性战术肃清者',bio:'冷静、高效、自律。所有靠谱，都是无数次自我消耗换来。',traits:{recover:1.0,fatigueRate:0.9,battleDmg:0.85,workEff:1.3},story:'我没崩溃过。也没真正撑住过。只是把每一次"撑住"重复了一万次。',story2:'独处的时候，才敢承认我也累。'},
-  shenyu:{id:'shenyu',name:'沈逾',gender:'男',surface:'职场新人',hidden:'炽热偏执狂战士',bio:'阳光、鲜活、少年感。看似开朗，实则极度缺爱、自卑偏执。',traits:{recover:0.8,fatigueRate:1.6,battleDmg:1.6,workEff:0.9},story:'我笑得很用力，是因为真的怕——你看到我安静的样子，就不想再靠近了。',story2:'打起来的时候反而最轻松。原来只有在拼命的时候，才觉得被看见。'}
+  wenwan:{id:'wenwan',name:'温晚',gender:'女',surface:'文职助理',hidden:'静默薄刃肃清者',bio:'温顺、耐心、讨好型。温柔都是伪装，习惯性自我压抑。',
+    traits:{
+      recover:1.5,fatigueRate:0.4,battleDmg:0.4,workEff:0.9,
+      battleExp:0.7,workExp:1.0,
+      moodEventResistance:0.33,moodFloor:60,
+    },
+    story:'……每次抬头笑的时候，我都觉得肩膀很重。其实我也不知道"乖"是什么形状，只是大家都这么说，我便学了下来。',
+    story2:'夜里我才知道，自己能握稳刀。原来我并不是没力气，只是白天不允许自己用力。'},
+  luzhe:{id:'luzhe',name:'陆则',gender:'男',surface:'资深骨干',hidden:'理性战术肃清者',bio:'冷静、高效、自律。所有靠谱，都是无数次自我消耗换来。',
+    traits:{
+      recover:1.0,fatigueRate:0.9,battleDmg:0.85,workEff:1.4,
+      battleExp:1.0,workExp:1.3,
+      moodEventResistance:1.0,moodFloor:0,
+      internalBurn:0.05, // 心情持续 -0.05/s
+    },
+    story:'我没崩溃过。也没真正撑住过。只是把每一次"撑住"重复了一万次。',
+    story2:'独处的时候，才敢承认我也累。'},
+  shenyu:{id:'shenyu',name:'沈逾',gender:'男',surface:'职场新人',hidden:'炽热偏执狂战士',bio:'阳光、鲜活、少年感。看似开朗，实则极度缺爱、自卑偏执。',
+    traits:{
+      recover:0.7,fatigueRate:1.8,battleDmg:1.8,workEff:0.8,
+      battleExp:1.5,workExp:0.8,
+      moodEventResistance:1.5,moodFloor:0,
+      workMoodPenalty:0.3, // 打工时心情 -0.3/s
+    },
+    story:'我笑得很用力，是因为真的怕——你看到我安静的样子，就不想再靠近了。',
+    story2:'打起来的时候反而最轻松。原来只有在拼命的时候，才觉得被看见。'},
 };
 
-const PlayerData={selectedId:'wenwan',current:'work',progress:0,hp:80,mood:70,pressure:15,tired:20,injury:5,exp:0,favor:0,lastTick:Date.now(),lastEvent:Date.now(),lastHintCheck:Date.now(),lastHintKey:null,storySeen:{wenwan:0,luzhe:0,shenyu:0},boostUsed:0,currentTask:null,log:[]};
+const PlayerData={selectedId:'wenwan',current:'work',progress:0,hp:80,mood:70,pressure:15,tired:20,injury:5,exp:0,favor:0,lastTick:Date.now(),lastEvent:Date.now(),lastHintCheck:Date.now(),lastHintKey:null,storySeen:{wenwan:0,luzhe:0,shenyu:0},boostUsed:0,currentTask:null,log:[],_taskCounter:0,_favorOnWork:0};
 
 function cur(){return ROSTER[PlayerData.selectedId];}
 function curTasks(){return TASKS[PlayerData.selectedId];}
 function clamp(n,a,b){return Math.max(a,Math.min(b,n));}
 function spriteUrl(id,form){return 'images/sprite-'+id+'-'+form+'.png';}
 function pushLog(msg){const t=new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});PlayerData.log.unshift('['+t+'] '+msg);PlayerData.log=PlayerData.log.slice(0,4);}
-
-// 经验 → 等级：100 exp/级，0~无限
 function lvlFromExp(exp){return 1+Math.floor(exp/100);}
-function expToNext(exp){return 100-(exp%100);}
 
-/* ===== 任务分发 ===== */
+// 应用 fx，自动套角色抗性
+function applyFx(fx, opts){
+  opts=opts||{};
+  if(!fx)return;
+  const r=cur().traits.moodEventResistance||1;
+  const f=opts.favor?1:1; // 好感不抗
+  if(fx.hp)PlayerData.hp=clamp(PlayerData.hp+fx.hp,0,100);
+  if(fx.mood){
+    let m=fx.mood*r;
+    if(opts.moodEvent)m*=r; // 事件心情再抗一次
+    PlayerData.mood=clamp(PlayerData.mood+m,0,100);
+  }
+  if(fx.tired)PlayerData.tired=clamp(PlayerData.tired+fx.tired,0,100);
+  if(fx.injury)PlayerData.injury=clamp(PlayerData.injury+fx.injury,0,100);
+  if(fx.pressure)PlayerData.pressure=clamp(PlayerData.pressure+fx.pressure,0,100);
+  if(fx.favor)PlayerData.favor=clamp(PlayerData.favor+fx.favor,0,100);
+}
+// 心情地板（温晚）
+function applyMoodFloor(){
+  const floor=cur().traits.moodFloor||0;
+  if(floor>0&&PlayerData.mood<floor)PlayerData.mood=floor;
+}
+
+/* ===== 任务分发（FavorStoryManager：打工+好感） ===== */
+function FavorStoryManager_tick(deltaSec){
+  // 打工时每 30s 概率 +1 好感（最自然的"陪伴产生好感"机制）
+  if(PlayerData.current!=='work')return;
+  PlayerData._favorOnWork=(PlayerData._favorOnWork||0)+deltaSec;
+  if(PlayerData._favorOnWork>=30){
+    PlayerData._favorOnWork=0;
+    // 性格决定好感获取难度
+    const favorChance={wenwan:0.5,luzhe:0.3,shenyu:0.7}[PlayerData.selectedId];
+    if(Math.random()<favorChance){
+      PlayerData.favor=clamp(PlayerData.favor+1,0,100);
+    }
+  }
+}
+
 function pickTask(){
   const pool=curTasks();
   const candidates=pool.filter(t=>!PlayerData.currentTask||t.name!==PlayerData.currentTask.name);
@@ -352,28 +418,6 @@ function assignTask(task){
   render();
   toast('📋 新任务：'+task.name);
 }
-function showTaskPicker(){
-  const pool=curTasks();
-  const shuffled=pool.slice().sort(()=>Math.random()-0.5);
-  const a=shuffled[0],b=shuffled[1];
-  const typeName={admin:'📋 行政',project:'📊 项目',assist:'🤝 协作'};
-  document.getElementById('taskTitle').textContent='分配新任务';
-  document.getElementById('taskDesc').innerHTML='<div>从下面选一个开始做：</div>';
-  document.getElementById('taskChoices').innerHTML=
-    '<button class="btn" data-task="'+a.name+'"><div style="font-size:9px;opacity:.7;margin-bottom:2px;">'+typeName[a.type]+'</div><div style="font-weight:600;">'+a.name+'</div></button>'+
-    '<button class="btn" data-task="'+b.name+'"><div style="font-size:9px;opacity:.7;margin-bottom:2px;">'+typeName[b.type]+'</div><div style="font-weight:600;">'+b.name+'</div></button>'+
-    '<button class="btn" data-task="__cancel__" style="margin-top:8px;">暂不换</button>';
-  Array.from(document.querySelectorAll('#taskChoices .btn')).forEach(btn=>{
-    btn.onclick=function(){
-      const name=this.getAttribute('data-task');
-      document.getElementById('taskModal').classList.remove('open');
-      if(name==='__cancel__')return;
-      const task=pool.find(t=>t.name===name);
-      if(task)assignTask(task);
-    };
-  });
-  document.getElementById('taskModal').classList.add('open');
-}
 function autoAssignTask(){
   if(!PlayerData.currentTask){
     const t=pickTask();
@@ -381,7 +425,6 @@ function autoAssignTask(){
   }
 }
 
-/* ===== 随机事件 ===== */
 function maybeEvent(){
   if(PlayerData.current!=='work')return;
   const now=Date.now();
@@ -399,30 +442,20 @@ function showEvent(ev){
     '<button class="btn" data-fx="right">'+ev.rightLbl+'</button>';
   Array.from(document.querySelectorAll('#eventChoices .btn')).forEach(btn=>{
     btn.onclick=function(){
-      const fx=this.getAttribute('data-fx');
-      const delta=ev[fx+'Fx'];
-      applyFx(delta);
-      pushLog(ev.title+(fx==='left'?' → '+ev.leftLbl:' → '+ev.rightLbl));
+      const fx=ev[this.getAttribute('data-fx')+'Fx'];
+      applyFx(fx,{moodEvent:true});
+      pushLog(ev.title+(this.getAttribute('data-fx')==='left'?' → '+ev.leftLbl:' → '+ev.rightLbl));
       document.getElementById('eventModal').classList.remove('open');
+      applyMoodFloor();
       render();
     };
   });
   document.getElementById('eventModal').classList.add('open');
 }
-function applyFx(fx){
-  if(!fx)return;
-  if(fx.hp)PlayerData.hp=clamp(PlayerData.hp+fx.hp,0,100);
-  if(fx.mood)PlayerData.mood=clamp(PlayerData.mood+fx.mood,0,100);
-  if(fx.tired)PlayerData.tired=clamp(PlayerData.tired+fx.tired,0,100);
-  if(fx.injury)PlayerData.injury=clamp(PlayerData.injury+fx.injury,0,100);
-  if(fx.pressure)PlayerData.pressure=clamp(PlayerData.pressure+fx.pressure,0,100);
-  if(fx.favor)PlayerData.favor=clamp(PlayerData.favor+fx.favor,0,100);
-}
 
-/* ===== 状态提示 ===== */
 function checkSystemHints(){
   const now=Date.now();
-  if(now-PlayerData.lastHintCheck<8000)return; // 8s 冷却
+  if(now-PlayerData.lastHintCheck<8000)return;
   for(const h of SYS_HINTS){
     try{
       if(h.when()&&PlayerData.lastHintKey!==h.title){
@@ -450,15 +483,22 @@ function showSystemHint(h){
       else if(c.action==='battle')switchWorld('battle','系统建议：状态好了，冲');
       pushLog('系统提示：'+h.title+' → '+c.lbl);
       document.getElementById('sysModal').classList.remove('open');
-      PlayerData.lastHintKey=null; // 重置，下次同类提示还能再触发
+      PlayerData.lastHintKey=null;
+      applyMoodFloor();
       render();
     };
   });
   document.getElementById('sysModal').classList.add('open');
 }
 
-/* ===== 主循环 ===== */
-function tick(deltaSec){
+function checkStory(){
+  const c=cur(),seen=PlayerData.storySeen[c.id];
+  if(PlayerData.favor>=30&&seen<1){PlayerData.storySeen[c.id]=1;showStory(c.story);}
+  else if(PlayerData.favor>=60&&seen<2){PlayerData.storySeen[c.id]=2;showStory(c.story2);}
+}
+
+/* ===== 主循环：WorldStateManager ===== */
+function WorldStateManager_tick(deltaSec){
   const c=cur(),inBattle=PlayerData.current==='battle',tr=c.traits;
   if(inBattle){
     PlayerData.progress=clamp(PlayerData.progress+deltaSec*(8*tr.battleDmg),0,100);
@@ -469,9 +509,10 @@ function tick(deltaSec){
     PlayerData.pressure=clamp(PlayerData.pressure-deltaSec*(0.5*tr.battleDmg),0,100);
     if(PlayerData.progress>=100){
       PlayerData.progress=0;
+      const expGain=Math.round(15*tr.battleExp);
       PlayerData.favor=clamp(PlayerData.favor+5,0,100);
-      PlayerData.exp=clamp(PlayerData.exp+15,0,9999);
-      pushLog('战斗结算 +5 好感 +15 经验');
+      PlayerData.exp=clamp(PlayerData.exp+expGain,0,9999);
+      pushLog('战斗结算 +5 好感 +'+expGain+' 经验');
     }
     if(PlayerData.tired>=80||PlayerData.injury>=60){switchWorld('work','太累了，回到表世界恢复');}
   }else{
@@ -480,10 +521,10 @@ function tick(deltaSec){
       PlayerData.progress=clamp(PlayerData.progress+deltaSec*5*tr.workEff*task.baseRate,0,100);
       if(PlayerData.progress>=100){
         PlayerData.progress=0;
-        PlayerData.exp=clamp(PlayerData.exp+task.exp,0,9999);
+        const expGain=Math.round(task.exp*tr.workExp);
+        PlayerData.exp=clamp(PlayerData.exp+expGain,0,9999);
         PlayerData.mood=clamp(PlayerData.mood+5,0,100);
-        pushLog(task.name+' 完成 +'+task.exp+' 经验');
-        // 每完成 3 个任务，pressure 涨一波
+        pushLog(task.name+' 完成 +'+expGain+' 经验');
         PlayerData._taskCounter=(PlayerData._taskCounter||0)+1;
         if(PlayerData._taskCounter%3===0)PlayerData.pressure=clamp(PlayerData.pressure+8,0,100);
         setTimeout(()=>autoAssignTask(),300);
@@ -502,13 +543,37 @@ function tick(deltaSec){
       PlayerData.mood=clamp(PlayerData.mood-mf,0,100);
       PlayerData.pressure=clamp(PlayerData.pressure+pf,0,100);
     }
-    if(PlayerData.tired<25&&PlayerData.injury<25&&PlayerData.hp>70&&PlayerData.mood>60){switchWorld('battle','状态恢复了，悄悄回到里世界');}
+    // 陆则"微压内耗"：压力不涨但心情持续慢掉
+    if(tr.internalBurn){
+      PlayerData.mood=clamp(PlayerData.mood-tr.internalBurn*deltaSec,0,100);
+    }
+    // 沈逾"情绪波动大"：打工时心情也消耗快
+    if(tr.workMoodPenalty&&task){
+      PlayerData.mood=clamp(PlayerData.mood-tr.workMoodPenalty*deltaSec,0,100);
+    }
+    // 切回里世界：OR 条件（任一满足）
+    const ok=(PlayerData.tired<25)||(PlayerData.injury<25&&PlayerData.hp>70)||(PlayerData.mood>60&&PlayerData.tired<35);
+    if(ok&&PlayerData.tired<35){switchWorld('battle','状态恢复了，悄悄回到里世界');}
   }
+  // 心情地板（温晚）
+  applyMoodFloor();
   PlayerData.lastTick=Date.now();
   render();
   checkStory();
+  FavorStoryManager_tick(deltaSec);
   maybeEvent();
   checkSystemHints();
+}
+
+/* ===== 离线结算：OfflineBattleManager（24h 上限） ===== */
+function OfflineBattleManager(){
+  const now=Date.now(),dt=Math.floor((now-PlayerData.lastTick)/1000);
+  if(dt<10)return null;
+  const before={hp:PlayerData.hp,mood:PlayerData.mood,pressure:PlayerData.pressure,tired:PlayerData.tired,injury:PlayerData.injury,exp:PlayerData.exp,favor:PlayerData.favor};
+  // 24h 上限（86400s）
+  const simSec=Math.min(dt,86400),step=60;
+  for(let s=0;s<simSec;s+=step){WorldStateManager_tick(step);}
+  return{elapsed:simSec,hp:PlayerData.hp-before.hp,mood:PlayerData.mood-before.mood,pressure:PlayerData.pressure-before.pressure,tired:PlayerData.tired-before.tired,injury:PlayerData.injury-before.injury,exp:PlayerData.exp-before.exp,favor:PlayerData.favor-before.favor};
 }
 
 function switchWorld(to,reason){
@@ -521,24 +586,8 @@ function switchWorld(to,reason){
   render();
 }
 
-function checkStory(){
-  const c=cur(),seen=PlayerData.storySeen[c.id];
-  if(PlayerData.favor>=30&&seen<1){PlayerData.storySeen[c.id]=1;showStory(c.story);}
-  else if(PlayerData.favor>=60&&seen<2){PlayerData.storySeen[c.id]=2;showStory(c.story2);}
-}
-
-function calcOffline(){
-  const now=Date.now(),dt=Math.floor((now-PlayerData.lastTick)/1000);
-  if(dt<10)return null;
-  const before={hp:PlayerData.hp,mood:PlayerData.mood,pressure:PlayerData.pressure,tired:PlayerData.tired,injury:PlayerData.injury,exp:PlayerData.exp,favor:PlayerData.favor};
-  const simSec=Math.min(dt,8*3600),step=60;
-  for(let s=0;s<simSec;s+=step){tick(step);}
-  return{elapsed:simSec,hp:PlayerData.hp-before.hp,mood:PlayerData.mood-before.mood,pressure:PlayerData.pressure-before.pressure,tired:PlayerData.tired-before.tired,injury:PlayerData.injury-before.injury,exp:PlayerData.exp-before.exp,favor:PlayerData.favor-before.favor};
-}
-
 function render(){
   setBar('hp',PlayerData.hp);setBar('mood',PlayerData.mood);setBar('pressure',PlayerData.pressure);setBar('tired',PlayerData.tired);setBar('injury',PlayerData.injury);setBar('favor',PlayerData.favor);
-  // exp 条用等级百分比
   const expInLvl=PlayerData.exp%100;
   document.getElementById('expBar').style.width=expInLvl+'%';
   document.getElementById('expVal').textContent='Lv.'+lvlFromExp(PlayerData.exp);
@@ -595,7 +644,8 @@ function setBar(name,val){const v=Math.round(val);document.getElementById(name+'
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(function(){t.classList.remove('show');},1800);}
 
 function showSettle(){
-  const r=calcOffline(),list=document.getElementById('settleList');
+  const r=OfflineBattleManager();
+  const list=document.getElementById('settleList');
   if(!r){list.innerHTML='<div class="item"><span>刚刚才结算过</span><span>—</span></div>';}
   else{
     const m=r,fmt=function(n){return n===0?'—':'<span class="delta '+(n>0?'positive':'negative')+'">'+(n>0?'+':'')+Math.round(n)+'</span>';};
@@ -649,7 +699,6 @@ function openRoster(){
     card.onclick=function(){
       PlayerData.selectedId=c.id;PlayerData.progress=0;PlayerData.current='work';PlayerData.currentTask=null;
       toast('已切换：'+c.name);setTimeout(()=>autoAssignTask(),300);render();closeRoster();
-      // 同时弹出该角色剧情列表
       setTimeout(()=>showStoryList(),350);
     };
     grid.appendChild(card);
@@ -660,7 +709,11 @@ function closeRoster(){document.getElementById('roster').classList.remove('open'
 
 document.getElementById('btnRoster').onclick=openRoster;
 document.getElementById('rosterClose').onclick=closeRoster;
-document.getElementById('btnTask').onclick=showTaskPicker;
+// 任务徽章点击 → 立即换任务（保留快捷入口）
+document.getElementById('taskBadge').onclick=function(){
+  const t=pickTask();
+  assignTask(t);
+};
 document.getElementById('btnSettle').onclick=showSettle;
 document.getElementById('settleClose').onclick=function(){document.getElementById('settleModal').classList.remove('open');};
 document.getElementById('btnBoost').onclick=function(){
@@ -669,19 +722,20 @@ document.getElementById('btnBoost').onclick=function(){
   PlayerData.mood=clamp(PlayerData.mood+12,0,100);
   PlayerData.tired=clamp(PlayerData.tired-8,0,100);
   PlayerData.pressure=clamp(PlayerData.pressure-5,0,100);
+  applyMoodFloor();
   toast('☕ 喝完心情好了一点点');
   pushLog('咖啡时间，心情 +12，疲劳 -8，压力 -5');
   render();
 };
 
 let lastLoop=Date.now();
-setInterval(function(){const now=Date.now(),dt=(now-lastLoop)/1000;lastLoop=now;tick(dt);},1000);
+setInterval(function(){const now=Date.now(),dt=(now-lastLoop)/1000;lastLoop=now;WorldStateManager_tick(dt);},1000);
 
 PlayerData.lastTick=Date.now();
 pushLog('新的一天开始了');
 setTimeout(()=>autoAssignTask(),300);
 render();
-setTimeout(function(){toast('提示：状态条最右是「等级」｜状态弹窗会主动建议你做什么');},1200);
+setTimeout(function(){toast('提示：右上角任务徽章可点换｜3 角色数值已差异化');},1200);
 </script>
 </body>
 </html>
